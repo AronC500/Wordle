@@ -20,19 +20,60 @@
     display:flex;
     gap:5px;
 }
+@keyframes pop {
+    0% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.1); 
+    }
+    100% { 
+        transform: scale(1); 
+    }
+}
 
-.letter{
+
+  
+.letter, .letterwithborder, .green, .gray, .yellow {
     font-family: 'Roboto';
-    border:2px #3a3a3c solid;
-    height:48.4px;
-    width:48.4px;
-    color:white;
+    height: 48.4px;
+    width: 48.4px;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight:bold;
-    font-size:30px;
+    font-weight: bold;
+    font-size: 30px;
 }
+
+.letter {
+    border: 2px solid #3a3a3c;
+}
+  
+.letterwithborder {
+    border: 2px solid #565758;
+    animation: pop 0.1s linear;
+
+}
+
+.green {
+    background-color: #538d4e; 
+    border: 2px solid #538d4e;
+
+}
+
+.gray {
+    background-color: #3a3a3c;
+    border: 2px solid #3a3a3c;
+
+}
+
+.yellow {
+    background-color: #b59f3b;
+    border: 2px solid #b59f3b;
+
+}
+
 
 .keyboard {
     display:flex;
@@ -44,7 +85,7 @@
     justify-content:center;
     gap: 6px;
 }
-.keyboardletter{
+.keyboardletter, .keyboardgreen, .keyboardyellow, .keyboardgray{
     height:58px;
     width:43px;
     border: none;
@@ -55,7 +96,23 @@
     color:white;
     font-weight: bold;
 
-    
+}
+
+.keyboardgreen {
+    background-color: #538d4e; 
+    border: 2px solid #538d4e;
+
+}
+
+.keyboardyellow {
+    background-color: #b59f3b;
+    border: 2px solid #b59f3b;
+
+}
+
+.keyboardgray {
+    background-color: #3a3a3c;
+    border: 2px solid #3a3a3c;
 
 }
 
@@ -73,3 +130,8 @@
 
 
 }
+
+
+
+
+
