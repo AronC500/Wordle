@@ -1,0 +1,85 @@
+
+
+.background {
+    background-color:rgb(227,227,225);
+    height:100vh;
+    width:100vw;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+}
+img {
+    height: 75px;
+    width: 75px;
+
+}
+
+.wordleText {
+    font-family: 'Playfair Display';  
+    font-size:36px;
+    font-weight:bold;
+}
+
+.description {
+    font-size:24.8px;
+    font-family: 'Georgia';
+
+
+}
+
+.date{
+    font-size:16px;
+    font-weight:500;
+    font-family: 'Inter';
+    text-align:center;
+    height:5px;
+    
+
+
+
+}
+.login{
+    width:150px;
+    border:1px black solid;
+    font-weight: 600;
+    border-radius:25px;
+    height:50px;
+    font-family:'Inter';
+    background-color:rgb(227,227,225);
+    font-size:16px;
+    cursor:pointer;
+
+
+}
+.buttonarea {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+.play{
+    width:150px;
+    font-weight: 600;
+    border-radius:25px;
+    border:1px black solid;
+    background-color:black;
+    color:white;
+    font-family:'Inter';
+    font-size:16px;
+    cursor:pointer;
+
+
+    
+
+}
+.rest {
+    font-size:15px;
+    font-family: 'Inter';
+    text-align:center;
+    height:5px;
+
+
+
+}
