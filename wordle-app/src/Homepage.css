@@ -10,6 +10,7 @@
     justify-content:center;
     gap:10px;
 
+
 }
 img {
     height: 75px;
@@ -26,16 +27,16 @@ img {
 .description {
     font-size:24.8px;
     font-family: 'Georgia';
-
+    text-align:center;
 
 }
+
 
 .date{
     font-size:16px;
     font-weight:500;
     font-family: 'Inter';
     text-align:center;
-    height:5px;
     
 
 
@@ -58,6 +59,9 @@ img {
     display:flex;
     justify-content:center;
     gap:10px;
+    margin-bottom:40px;
+    margin-top:25px;
+
 }
 .play{
     width:150px;
@@ -78,8 +82,11 @@ img {
     font-size:15px;
     font-family: 'Inter';
     text-align:center;
-    height:5px;
+}
 
 
 
+p {
+    margin: 0;
+    padding: 0;
 }
