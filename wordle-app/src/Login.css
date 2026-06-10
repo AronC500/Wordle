@@ -1,0 +1,107 @@
+.loginbackground {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    background-color:white;
+    height:100vh;
+    margin-top:100px;
+
+
+}
+.emailtext {
+    font-size:14px;
+    font-weight:600;
+    font-family:'Inter';
+
+}
+.LoginText {
+    font-weight:400;
+    font-size:27px;
+    font-family: 'Playfair Display';
+    padding-bottom:10px;
+}
+
+.email {
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    margin-top:16px;
+}
+input {
+    height:2.75rem;
+    font-weight:500;
+    font-size:1rem;
+    padding:0px 0.75rem;
+}
+.forms {
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    max-width:450px;
+}
+
+a{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.alternateOptions {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.termstext {
+    text-align: center;
+    font-size:14px;
+    font-family:'Inter';
+
+}
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    width: 50%;
+}
+.horizontalline{
+    display:flex; 
+    gap:7px;
+    font-size:14px;
+    font-weight:500;
+    font-family:'Inter';
+}
+.continuebutton{
+    height:44px;
+    font-size:1em;
+    font-family:'Inter';
+    font-weight:700;
+    cursor:pointer;
+    border-radius:3px;
+    background-color:rgb(18, 18, 18);
+    color:white;
+    border:0.0625em solid rgb(18, 18, 18);
+}
+
+.google, .apple {
+    height:44px;
+    padding:1px;
+    cursor:pointer;
+    font-size:1em;
+    background-color:white;
+    border:1px solid black;
+    border-radius:3px;
+    font-family:'Inter';
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+.google {
+    gap:10px;
+
+}
+.apple {
+    gap:15px;
+}
+p{
+    line-height: 1;
+}
+

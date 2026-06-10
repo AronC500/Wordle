@@ -3,6 +3,7 @@ import './App.css'
 
 function App() {
     const currentword = 'LOVER'
+
     const [guesses, setGuesses] = useState([
         ['', '', '', '', ''],
         ['', '', '', '', ''],
@@ -56,11 +57,15 @@ function App() {
             return "gray"
         }
     }
+    
     function keyPress(letter) {
         if (currentCol === 5) {
             if (letter === 'ENTER' && currentRow !== 6) {
-                setCurrentRow(currentRow + 1)
-                setCurrentCol(0)
+                setTimeout(() => {
+                    setCurrentRow(currentRow + 1)
+                    setCurrentCol(0)
+                }, 3000)
+
                 return
             }
             if (letter !== 'DELETE') {
@@ -102,7 +107,7 @@ function App() {
         {keyboard.map((row,rowIndex) => (
             <div key={rowIndex} className="keyboardrow"> 
             {row.map((letter,colIndex) => (
-                <button onClick = {() => keyPress(letter)} key={colIndex} className={letter === "ENTER" ? "ENTER" : letter === "DELETE" ? "DELETE" : "keyboardletter"}>
+                <button onClick = {() => keyPress(letter)} key={colIndex} className={letter === "DELETE" ? "DELETE" : letter === "ENTER" ? "ENTER" : "keyboardletter"}>
                     {letter}
                 </button>
             ))}
