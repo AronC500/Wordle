@@ -2,7 +2,9 @@ import {useState, useEffect} from 'react'
 import './App.css'
 
 function App() {
+    
     const currentword = 'LOVER'
+    const [showBurger, setShowBurger] = useState(false)
 
     const [guesses, setGuesses] = useState([
         ['', '', '', '', ''],
@@ -57,7 +59,6 @@ function App() {
             return "gray"
         }
     }
-    
     function keyPress(letter) {
         if (currentCol === 5) {
             if (letter === 'ENTER' && currentRow !== 6) {
@@ -92,6 +93,14 @@ function App() {
     }
     return (
     <div className="parent">
+      <div className="header">
+        <div className="hamburgerdiv">
+            <button className="hamburgerbutton" onClick={() => setShowBurger(true)}> 
+                <img style= {{height:"40px", width:"45px"}}src="hamburger.png"/> 
+            </button>
+        </div>
+
+      </div>
       <div className="board">
         {guesses.map((row, rowIndex) => (
             <div key={rowIndex} className="word"> 
@@ -113,7 +122,20 @@ function App() {
             ))}
             </div>
         ))}
-      </div>
+      </div> 
+      <div className={showBurger ? "overlay" : "overlayHidden"}>
+        <div className="overlayheader">
+            <button className="closebutton" onClick={() => setShowBurger(false)}>
+                <img style={{width:"32px", height:"32px"}} src="/Xbutton.png" />
+            </button>
+        </div>
+       </div>
+      
+
+      
+      
+      
+
     </div>
     )
   }

@@ -17,7 +17,7 @@ function Homepage() {
                 <p> a 5-letter word.</p>
             </div>
             <div className="buttonarea">
-                <button className="login" onClick = {()=> { navigate('/login') }}>Log in</button>
+                <button className="login" onClick = {() => { navigate('/login') }}>Log in</button>
                 <button className="play" onClick = {() => { navigate('/game') }}>Play</button>
             </div>
             <div className="bottomtext">

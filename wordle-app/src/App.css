@@ -11,9 +11,8 @@
     flex-direction:column;
     align-items:center;
     gap:10px;
-    margin-top:70px;
     background-color:black;    
-
+    height:100vh;
 
 
 }
@@ -134,6 +133,71 @@
 }
 
 
+
+
+
+
+
+.hamburgerbutton{
+    all: unset;
+    cursor:pointer;
+    padding-top:3px;
+}
+
+.header{
+    width:100%;
+    height: 55px;
+    border-bottom:1px solid #424242;
+
+}
+
+.hamburgerdiv {
+    width:55px;
+    height:55px;
+    display:flex;
+    justify-content:center;
+    margin-left:5px;
+
+
+
+}
+.hamburgerdiv:hover {
+    background-color:#2f2f31;
+}
+
+
+
+.overlay, .overlayHidden {
+    width: 375px;
+    background-color: #121213;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    transition: transform 200ms ease;
+}
+  
+.overlay {
+    /* pixels away from anchor so here 0 pixel away from left:0" */
+    transform: translateX(0px);      
+}
+  
+.overlayHidden {
+    transform: translateX(-375px);  
+}
+
+.overlayheader{
+    width:100%;
+    height:55px;
+    margin-left:16px;
+    margin-top:11px;
+}
+
+.closebutton{
+    all:unset;
+    cursor:pointer;
+}
 
 
 

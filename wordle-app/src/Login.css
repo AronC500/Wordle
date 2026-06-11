@@ -33,6 +33,28 @@ input {
     font-size:1rem;
     padding:0px 0.75rem;
 }
+.inputInvalid{
+    border:1px solid rgba(187, 4, 4, 0.9);
+    border-radius:3px;
+}
+.inputNormal {
+    border:1px solid black;
+    border-radius:3px;
+    
+}
+.error {
+    color:rgba(187, 4, 4, 0.9);
+    font-size: 14px;
+    font-weight:500;
+    font-family:'Inter';
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+}
+.error img {
+    margin-left:3px;
+}
 .forms {
     display:flex;
     flex-direction:column;
