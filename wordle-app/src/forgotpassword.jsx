@@ -1,28 +1,69 @@
 import "./forgotpassword.css"
-
+import {useLocation, useNavigate} from 'react-router-dom'
+import {useState} from 'react'
 function forgotPassword() {
+    const navigate = useNavigate()
+    const testcode = 234567
+    const location = useLocation()
+    const email = location.state?.email
+    const [input, setInput] = useState('')
+    const [showPopUp, setShowPopUp] = useState(false)
+    const [invalidCode, SetinvalidCode] = useState(false)
+    function checkInputs(e) {
+        SetinvalidCode(false)
+        if (isNaN(Number(e.target.value))) {
+            return
+        }
+        if (e.key === 'Backspace') {
+            setInput(e.target.value)
+            return
+        }
+        setInput(e.target.value) 
+    }
+
+    function requestCode() {
+        setShowPopUp(true)
+
+    }
+    function submitCode() {
+        if (testcode === input) {
+            navigate('/')
+        }
+        SetinvalidCode(true)
+
+    }
     return (
         <div className="forgotpasswordbackground">
             <div className="headingtext">
-                <div>Welcome back</div>
-                <div>We've sent a login code to the email you entered. This code will stay valid for ten minutes.
+                <div className="checkemail">Check your email to reset your password</div>
+                <div className="codetext"> Enter the code we sent to <span style={{fontWeight:600}}>{email}</span>  to update your login. This code expires in 10 minutes.
                 </div>
             </div>
-            <div className="inputs">
-                <div className="email">
-                    <div>Email address</div>
-                    <input type="email"/>
-                </div>
-                <div className="verification">
+            <div className="verificationcode">
                     <div>Verification code</div>
-                    <input/>
-                </div>
+                    <input className="verificationinput" maxLength={6} value = {input} onChange={checkInputs}/>
+                    {invalidCode &&
+                    <div className="codeerror">
+                        <img src="/error.png" style={{width:"13px",height:"13px"}}/>
+                        <div>The code you entered is incomplete. Please check your email and try again.</div>
+                    </div>
+                
+                    }
+                    
             </div>
-            <div className="buttons">
-                <button>Log in</button>
-                <button>Use a password instead</button>
+            <div className="submit">
+                <button onClick={submitCode} className="submitbutton">Submit</button>
             </div>
-            <div>Didn't receive a code? Check your spam folder or <a>request a new one.</a></div>
+            <div className="bottomtext">Didn't receive a code? Check your spam folder or <a onClick={requestCode}>request a new one.</a></div>
+            {showPopUp &&
+            <div className="popup">
+                <img style={{width:"23px",height:"23px"}} src="/check.png"/>
+                <span style={{marginRight:"70px", marginLeft:"15px"}}>We've sent another code to {email}</span>
+                <button onClick={()=>setShowPopUp(false)} style={{all:"unset", cursor:"pointer"}}> 
+                    <img style={{width:"13px",height:"13px"}} src="/blackx.png"/>
+                </button>
+            </div>
+            }
         </div>
     )
 }
