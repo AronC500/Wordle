@@ -1,0 +1,22 @@
+.UpdatedPassText {
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:110px;
+    gap:48px;
+
+
+}
+
+.loginupdated {
+    font-weight:300;
+    font-size:22px;
+    font-family:'Inter';
+} 
+.passwordsavedtext {
+    font-size:16px;
+    margin-bottom:12px;
+    width:440px;
+
+}

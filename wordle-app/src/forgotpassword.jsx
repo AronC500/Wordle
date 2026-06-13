@@ -1,14 +1,19 @@
 import "./forgotpassword.css"
 import {useLocation, useNavigate} from 'react-router-dom'
-import {useState} from 'react'
-function forgotPassword() {
+import {useState, useEffect} from 'react'
+function ForgotPassword() {
     const navigate = useNavigate()
-    const testcode = 234567
+    const testcode = '234567'
     const location = useLocation()
     const email = location.state?.email
     const [input, setInput] = useState('')
     const [showPopUp, setShowPopUp] = useState(false)
     const [invalidCode, SetinvalidCode] = useState(false)
+    useEffect(() => {
+        if (!email) {
+            navigate('/login')
+        }
+    }, [])
     function checkInputs(e) {
         SetinvalidCode(false)
         if (isNaN(Number(e.target.value))) {
@@ -27,7 +32,8 @@ function forgotPassword() {
     }
     function submitCode() {
         if (testcode === input) {
-            navigate('/')
+            navigate('/login/password/SetNewPassword', {state:{email:email}})
+            return
         }
         SetinvalidCode(true)
 
@@ -41,7 +47,7 @@ function forgotPassword() {
             </div>
             <div className="verificationcode">
                     <div>Verification code</div>
-                    <input className="verificationinput" maxLength={6} value = {input} onChange={checkInputs}/>
+                    <input className= {invalidCode ? "verificationinputinvalid" : "verificationinput"} maxLength={6} value = {input} onChange={checkInputs}/>
                     {invalidCode &&
                     <div className="codeerror">
                         <img src="/error.png" style={{width:"13px",height:"13px"}}/>
@@ -67,4 +73,4 @@ function forgotPassword() {
         </div>
     )
 }
-export default forgotPassword
+export default ForgotPassword
