@@ -53,25 +53,94 @@
   
 .letterwithborder {
     border: 2px solid #565758;
-    animation: pop 0.1s linear;
+    animation: pop 0.1s linear !important;
 
 }
 
+@keyframes letterrotategreen {
+    0% {
+        transform: rotateX(0deg);
+        border: 2px solid #565758;
+        background-color: black;
+
+    }
+    50% {
+        transform: rotateX(90deg);
+        background-color: #538d4e; 
+        border: 2px solid #538d4e;
+
+    }
+    100% {
+        transform: rotateX(0deg);
+        background-color: #538d4e; 
+        border: 2px solid #538d4e;
+
+    }
+}
+
+@keyframes letterrotategray {
+    0% {
+        transform: rotateX(0deg);
+        border: 2px solid #565758;
+        background-color: black;
+
+        
+    }
+    50% {
+        transform: rotateX(90deg);
+        background-color: #3a3a3c;
+        border: 2px solid #3a3a3c;
+
+    }
+    100% {
+        transform: rotateX(0deg);
+        background-color: #3a3a3c;
+        border: 2px solid #3a3a3c;
+    }
+}
+
+@keyframes letterrotateyellow {
+    0% {
+        transform: rotateX(0deg);
+        border: 2px solid #565758;
+        background-color: black;
+
+
+    }
+    50% {
+        transform: rotateX(90deg);
+        background-color: #b59f3b;
+        border: 2px solid #b59f3b;
+
+    }
+    100% {
+        transform: rotateX(0deg);
+        background-color: #b59f3b;
+        border: 2px solid #b59f3b;
+    }
+}
+
+
 .green {
-    background-color: #538d4e; 
-    border: 2px solid #538d4e;
+    animation: letterrotategreen 0.5s ease forwards;
+    animation-fill-mode: both;
+
 
 }
 
 .gray {
-    background-color: #3a3a3c;
-    border: 2px solid #3a3a3c;
+    animation: letterrotategray 0.5s ease forwards;
+    animation-fill-mode: both;
+
+
 
 }
 
 .yellow {
-    background-color: #b59f3b;
-    border: 2px solid #b59f3b;
+    animation: letterrotateyellow 0.5s ease forwards;
+    animation-fill-mode: both;
+
+
 
 }
 

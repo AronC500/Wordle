@@ -5,6 +5,7 @@ function App() {
     
     const currentword = 'LOVER'
     const [showBurger, setShowBurger] = useState(false)
+    const [animationStyle, setanimationStlye] = useState('')
 
     const [guesses, setGuesses] = useState([
         ['', '', '', '', ''],
@@ -62,11 +63,8 @@ function App() {
     function keyPress(letter) {
         if (currentCol === 5) {
             if (letter === 'ENTER' && currentRow !== 6) {
-                setTimeout(() => {
-                    setCurrentRow(currentRow + 1)
-                    setCurrentCol(0)
-                }, 3000)
-
+                setCurrentRow(currentRow + 1)
+                setCurrentCol(0)
                 return
             }
             if (letter !== 'DELETE') {
@@ -105,7 +103,7 @@ function App() {
         {guesses.map((row, rowIndex) => (
             <div key={rowIndex} className="word"> 
             {row.map((letter, colIndex) => (
-                <div key={letter === '' ? `${rowIndex}${colIndex}` :`${rowIndex}${colIndex}${letter}`} className={determineColor(letter, colIndex, rowIndex)}>
+                <div key={letter === '' ? `${rowIndex}${colIndex}` :`${rowIndex}${colIndex}${letter}`} className={determineColor(letter, colIndex, rowIndex)} style={{ animationDelay: `${colIndex * 0.3}s` }}>
                     {letter}
                 </div>
             ))}
@@ -130,11 +128,6 @@ function App() {
             </button>
         </div>
        </div>
-      
-
-      
-      
-      
 
     </div>
     )
