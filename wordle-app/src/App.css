@@ -2,6 +2,8 @@
     display:flex;
     flex-direction:column;
     gap:5px;
+    position:relative;
+    align-items:center;
 
     
 }
@@ -11,15 +13,50 @@
     flex-direction:column;
     align-items:center;
     gap:10px;
-    background-color:black;    
+    background-color:#121213;   
     height:100vh;
 
 
 }
 
-.word {
+.word, .wordanimation {
     display:flex;
     gap:5px;
+}
+
+@keyframes shake {
+    0% {
+        transform:translateX(5px)
+        
+    }
+    12% {
+        transform:translateX(-5px)
+    }
+    25% {
+        transform: translateX(5px)
+    }
+    37.5% {
+        transform: translateX(-5px)
+    }
+    50% {
+        transform: translateX(5px)
+    }
+    62.5% {
+        transform: translateX(-5px)
+    }
+    75% {
+        transform: translateX(5px)
+    }
+    87.5% {
+        transform: translateX(-5px)
+    }
+    100% {
+        transform: translateX(5px)
+    }
+}
+
+.wordanimation {
+    animation: shake 0.5s linear;
 }
 @keyframes pop {
     0% { 
@@ -35,7 +72,7 @@
 
 
   
-.letter, .letterwithborder, .green, .gray, .yellow {
+.letter, .letterwithborder, .green, .gray, .yellow, .jump {
     font-family: 'Roboto';
     height: 48.4px;
     width: 48.4px;
@@ -61,11 +98,16 @@
     0% {
         transform: rotateX(0deg);
         border: 2px solid #565758;
-        background-color: black;
+        background-color:#121213;   
 
     }
     50% {
         transform: rotateX(90deg);
+        border: 2px solid #565758;
+        background-color:#121213;   
+
+    }
+    51% {
         background-color: #538d4e; 
         border: 2px solid #538d4e;
 
@@ -78,18 +120,44 @@
     }
 }
 
+@keyframes jumpupanddown {
+    0% {
+        transform: translateY(0px);
+    }
+    40% {
+        transform: translateY(-25px);
+    }
+    70% {
+        transform: translateY(4px);
+    }
+    85% {
+        transform: translateY(-8px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+
+
 @keyframes letterrotategray {
     0% {
         transform: rotateX(0deg);
         border: 2px solid #565758;
-        background-color: black;
+        background-color:#121213;   
 
         
     }
     50% {
         transform: rotateX(90deg);
+        border: 2px solid #565758;
+        background-color:#121213;   
+
+    }
+    51% {
         background-color: #3a3a3c;
         border: 2px solid #3a3a3c;
+
 
     }
     100% {
@@ -103,12 +171,18 @@
     0% {
         transform: rotateX(0deg);
         border: 2px solid #565758;
-        background-color: black;
+        background-color:#121213;   
 
 
     }
     50% {
         transform: rotateX(90deg);
+        border: 2px solid #565758;
+        background-color:#121213;   
+
+
+    }
+    51% {
         background-color: #b59f3b;
         border: 2px solid #b59f3b;
 
@@ -121,15 +195,25 @@
 }
 
 
-.green {
-    animation: letterrotategreen 0.5s ease forwards;
+
+.green, .jump{
+    animation: letterrotategreen 0.5s linear;
+    /*
+        apply both forwards(applies 100% keyframe value after animation end otherwise it would go back to original and backwards(applies 0% keyframe value during animation delay)
+    */
     animation-fill-mode: both;
 
 
 }
 
+.jump {
+    animation: jumpupanddown 0.5s linear;
+    background-color: #538d4e; 
+    border: 2px solid #538d4e;
+}
+
 .gray {
-    animation: letterrotategray 0.5s ease forwards;
+    animation: letterrotategray 0.5s linear;
     animation-fill-mode: both;
 
 
@@ -137,7 +221,7 @@
 }
 
 .yellow {
-    animation: letterrotateyellow 0.5s ease forwards;
+    animation: letterrotateyellow 0.5s linear;
     animation-fill-mode: both;
 
 
@@ -244,7 +328,7 @@
     height: 100vh;
     position: fixed;
     left: 0;
-    transition: transform 200ms ease;
+    transition: transform 0.2s ease;
 }
   
 .overlay {
@@ -270,3 +354,39 @@
 
 
 
+
+
+.popupmessage {
+    position:absolute;
+    background-color:white;
+    border-radius:4px;
+    font-weight:600;
+    font-family:'Inter';
+    font-size:13px;
+    padding:13px 12px;
+    top:-5px;
+    z-index:1;
+    
+
+}
+
+.gameoverbuttons {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    width:252px;
+    margin-top:40px;
+}
+
+.resultbutton, .homebutton {
+    cursor:pointer;
+    height:44px;
+    background-color:#121213;
+    border:1px white solid;
+    color:white;
+    border-radius:24px;
+    font-weight:500;
+    font-size:14px;
+    font-family:'Inter';
+
+}
