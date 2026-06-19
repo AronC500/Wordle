@@ -27,6 +27,11 @@ function App() {
     const [gameOver, isGameOver] = useState(false)
     const [winRow, setwinRow] = useState(null)
     const [keyboardColor, setkeyboardColor] = useState({})
+    const [showSettings, setShowSettings] = useState(false)
+    const [showStatistics, setShowStatistics] = useState(false)
+    const [showHowPlay ,setShowHowPlay] = useState(false)
+    const [hardmode, setHardMode] = useState(false)
+    const [keyboardonly, setkeyboardonly] = useState(false)
     const keyboard = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
@@ -176,7 +181,6 @@ function App() {
             return;
         }
 
-//also understand the useeffect
         newArray[currentRow][currentCol] = letter
         setGuesses(newArray)
         setCurrentCol(currentCol + 1)
@@ -184,13 +188,95 @@ function App() {
     }
     return (
     <div className="parent">
+        {showSettings &&
+        <div className="settingsbackground">
+            <div className="settingspopup">
+                <div className="settingstext">
+                    <div>SETTINGS </div>
+                    <button style={{position:"absolute", right:"-8px"}}className="closebutton" onClick={()=> {
+                        setdisableInput(false)
+                        setShowSettings(false)
+                    }}>
+                    <img  style={{height:"40px", width:"40px"}}src="/Xbutton.png"/>
+                    </button>
+
+                </div>
+                <div className="settingbody">
+                    <div className="individual">
+                        <div>
+                            <div className="settingbigtext">Hard Mode</div>
+                            <div className="settingsmalltext">Any revealed hints must be used in subsequent guesses</div>
+                        </div>
+                        <button onClick={() => {
+                            setHardMode(!hardmode)
+                            setHardModeInteracted(true)
+                        }} className={hardmode ? "greenbutton" : "graybutton"}>
+                            <div className='circle'></div>
+                        </button>
+                    </div>
+                    <div className="individual">
+                        <div>
+                            <div className="settingbigtext">Onscreen Keyboard Input Only </div>
+                            <div className="settingsmalltext" style={{width:"400px"}}>Ignore key input except from the onscreen keyboard. Most helpful for users using speech recognition or other assitive devices. </div>
+                        </div>
+                        <button onClick={() => {
+                            setkeyboardonly(!keyboardonly)
+                            setKeyboardOnlyInteracted(true)
+                        }} className={keyboardonly ? "greenbutton" : "graybutton"}>
+                             <div className ='circle'></div>
+                        </button>            
+                    </div>
+                    <div className="individual" style={{border:"none"}}>
+                        <div className="settingsmalltext">&copy; 2026 The Aron Times Company</div>
+                        <div className="settingsmalltext">#1</div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        }
+        {showHowPlay &&
+        <div className="settingsbackground">
+            <div>
+            </div>
+        </div>
+        }
+        {showStatistics &&
+        <div>
+        </div>
+        
+        }
+
       <div className="header">
         <div className="hamburgerdiv">
-            <button className="hamburgerbutton" onClick={() => setShowBurger(true)}> 
+            <button className="hamburgerbutton" onClick={() => {
+                setdisableInput(true)
+                setShowBurger(true)
+                }}> 
                 <img style= {{height:"40px", width:"45px"}}src="hamburger.png"/> 
             </button>
         </div>
-
+        <div className="rightside">
+            <button onClick={() => {
+                setdisableInput(true)
+                setShowStatistics(true)
+            }}>
+                <img src="/statistics.png"/>
+            </button>
+            <button onClick={() => {
+                setdisableInput(true)
+                setShowHowPlay(true)
+            }}>
+                <img src="/whitequestionmark.png"/>
+            </button>
+            <button onClick={()=>  {          
+                    setdisableInput(true)
+                    setShowSettings(true)}}>
+                <img src="/settings.png"/>
+            </button>
+        </div>
       </div>
       <div className="board">
         {showGamePopup &&
@@ -224,15 +310,38 @@ function App() {
       {gameOver &&
         <div className="gameoverbuttons">
             <button className="resultbutton">See Results</button>
-            <button onClick={()=> navigate('/')}className="homebutton">Home</button>
+            <button onClick={()=> navigate('/')} className="homebutton">Home</button>
         </div>
       }
       
       <div className={showBurger ? "overlay" : "overlayHidden"}>
         <div className="overlayheader">
-            <button className="closebutton" onClick={() => setShowBurger(false)}>
+            <button className="closebutton" onClick={() => {
+                setdisableInput(false)
+                setShowBurger(false)}}>
                 <img style={{width:"32px", height:"32px"}} src="/Xbutton.png" />
             </button>
+        </div>
+        <img style={{width:"100%", height:"200px"}}src="/wordlebackground.png"/>
+        <div className="privacysection">
+            <div style={{paddingLeft:"20px"}}>Privacy Settings</div>
+            <div className="privacy" >
+                    <button>Privacy Policy</button>
+
+                    <button>Cookie Policy</button>
+
+                    <button>Privacy FAQ</button>
+
+                    <button>Delete My Account</button>
+
+                    <button>Your Privacy Choices</button>
+            </div>
+
+        </div>
+        <div className="logoutsection">
+            <button className="bottomhome" onClick={()=> navigate('/')}>HOME</button>
+            <button className="bottomloginbutton" onClick={() =>navigate('/login')}>LOG IN</button>
+
         </div>
        </div>
 

@@ -301,7 +301,27 @@
     width:100%;
     height: 55px;
     border-bottom:1px solid #424242;
+    display:flex;
+    justify-content:space-between;
 
+}
+.rightside {
+    margin-right:5px;
+}
+.rightside button {
+    background-color:#121213;
+    border:none;
+    height:55px;
+    width:55px;
+    cursor:pointer
+}
+
+.rightside button:hover {
+    background-color:#2f2f31;
+}
+.rightside img {
+    height:35px;
+    width:35px;
 }
 
 .hamburgerdiv {
@@ -321,7 +341,7 @@
 
 
 .overlay, .overlayHidden {
-    width: 375px;
+    width:375px;
     background-color: #121213;
     display: flex;
     flex-direction: column;
@@ -341,10 +361,10 @@
 }
 
 .overlayheader{
-    width:100%;
+    width:fit-content;
     height:55px;
-    margin-left:16px;
-    margin-top:11px;
+    display:flex;
+    transform:translateX(8px);
 }
 
 .closebutton{
@@ -389,4 +409,183 @@
     font-size:14px;
     font-family:'Inter';
 
+}
+
+
+
+.privacysection {
+    color:white;
+    font-weight:700;
+    font-family:'Inter';
+    font-size:13px;
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    position:relative;
+    padding-top:25px;
+
+
+}
+
+.privacy button {
+    all: unset;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    padding: 13px 0px 13px 40px;
+    box-sizing:border-box;
+}
+
+
+.privacy {
+    display:flex;
+    flex-direction:column;
+    font-size:14px;
+    font-weight:300;
+    margin-top:10px;
+
+}
+
+
+.privacy button:hover {
+    background-color:#2f2f31;
+
+}
+.logoutsection {
+    margin-top:10px;
+    padding:20px;
+    border-top:1px white solid;
+    position:absolute;
+    bottom:0;
+    display:flex;
+    gap:10px;
+    background-color:black;
+    width:fit-content;
+}
+.bottomloginbutton, .bottomhome {
+    background-color:white;
+    border:none;
+    font-family:'Inter';
+    font-weight:bold;
+    font-size: 12px;
+    height:36px;
+    border:1px solid white;
+    border-radius:3px;
+    width:162.5px;
+    cursor:pointer;
+}
+
+.bottomloginbutton:hover, .bottomhome:hover {
+    background-color:black;
+    border:1px solid black;
+    color:white;
+}
+
+.settingsbackground {
+    position:fixed;
+    height:100vh;
+    width:100vw;
+    background-color:rgba(0,0,0,0.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:2;
+}
+.settingspopup {
+    background-color:white;
+    left:50%;
+    top:50%;
+    border-radius:8px;
+    border:1px solid #121213;
+    background-color:#121213;
+    width:505px;
+    padding:20px 17px;
+    display:flex;
+    flex-direction:column;
+    color:white;
+
+
+
+
+}
+
+
+.settingstext {
+    font-weight:700;
+    font-family:'Inter';
+    text-align:center;
+    font-size:15.5px;
+    color:white;
+    display:flex;
+    align-items:center;
+    position:relative;
+    justify-content:center;
+
+}
+
+.settingbody {
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.settingbigtext {
+    font-size:17px;
+    font-family:'Inter';
+
+}
+
+.settingsmalltext {
+    font-family:'Inter';
+    font-size:11.5px;
+    color:#dfdfdf;
+
+}
+
+.individual {
+    display:flex;
+    justify-content:space-between;
+    padding:15px 0px;
+    border-bottom:1px solid #3a3a3c;
+    align-items:center;
+
+}
+
+@keyframes togglemove {
+    0% {
+        transform:translateX(0px)
+    }
+    100% {
+        transform:translateX(14px)
+    }
+}
+.graybutton, .greenbutton {
+    background-color: #565758;
+    border: 1px solid #565758;
+    border-radius: 15px;
+    width: 34px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.greenbutton {
+    background-color: #538d4e;
+    border: 1px solid #538d4e;
+}
+
+.circle {
+    background-color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 10px;
+    position: absolute;
+    left: 1px;
+    transition: transform 0.2s ease;
+}
+
+.greenbutton .circle {
+    transform: translateX(13px);
 }
