@@ -2,7 +2,9 @@ import {useState, useEffect} from 'react'
 import './App.css'
 import { validWords, answerList } from './wordlist.js'
 import {useNavigate} from 'react-router-dom'
-
+//can turn off hard mode if row === 0. also need to do hard mode error msg when u dont use one of the previous letters.
+//need to do message pop up when u didnt get the word that shows the word at end. need to implement hard mode logic. need check if msg of word
+//pop up if u got it correct. error message when in hard mode and cantt turn it off .
 function App() {
     const startDate = new Date(2021,5,19)
     const today = new Date()
@@ -11,7 +13,7 @@ function App() {
     const [shakeRow, setShakeRow] = useState(null)
     const navigate = useNavigate()
     const [showBurger, setShowBurger] = useState(false)
-    const [guesses, setGuesses] = useState([
+    const [guesses, setGuesses] = useState(JSON.parse(localStorage.getItem('guess')) || [
         ['', '', '', '', ''],
         ['', '', '', '', ''],
         ['', '', '', '', ''],
@@ -19,24 +21,58 @@ function App() {
         ['', '', '', '', ''],
         ['', '', '', '', ''],
     ])    
-    const [currentRow, setCurrentRow] = useState(0)
+    const [currentRow, setCurrentRow] = useState(Number(localStorage.getItem('currentrow')) || 0)
     const [currentCol, setCurrentCol] = useState(0)
-    const [disableInput, setdisableInput] = useState(false)
+    const [disableInput, setdisableInput] = useState(true)
     const [showGamePopup, setShowGamePopup] = useState(false)
     const [MessagetoShow, setMessagetoShow] = useState('')
-    const [gameOver, isGameOver] = useState(false)
+    const [gameOver, isGameOver] = useState(JSON.parse(localStorage.getItem('gameover')) || false)
     const [winRow, setwinRow] = useState(null)
-    const [keyboardColor, setkeyboardColor] = useState({})
+    const [keyboardColor, setkeyboardColor] = useState( {})
     const [showSettings, setShowSettings] = useState(false)
     const [showStatistics, setShowStatistics] = useState(false)
     const [showHowPlay ,setShowHowPlay] = useState(false)
-    const [hardmode, setHardMode] = useState(false)
-    const [keyboardonly, setkeyboardonly] = useState(false)
+    const [hardmode, setHardMode] = useState(JSON.parse(localStorage.getItem('hardmode')) || false)
+    const [keyboardonly, setkeyboardonly] = useState(JSON.parse(localStorage.getItem('keyboardonly')) || false)
     const keyboard = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
         ['ENTER','Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE']
     ]
+    function reportBug() {
+        const deviceSummary = `
+
+    --
+    Device summary:
+    Page: ${window.location.pathname}
+    Platform: Web (${navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'})
+    Browser: ${getBrowserName()}
+    Screen Resolution: ${window.screen.width} x ${window.screen.height}
+    Viewport Size: ${window.innerWidth} x ${window.innerHeight}
+    Timezone: UTC${-new Date().getTimezoneOffset() / 60 >= 0 ? '+' : ''}${-new Date().getTimezoneOffset() / 60}
+    `
+        const subject = encodeURIComponent("Wordle Bug Report")
+        const body = encodeURIComponent(deviceSummary)
+
+        window.location.href = `mailto:aronchen500@gmail.com?subject=${subject}&body=${body}`
+    }
+    
+    function getBrowserName() {
+        const userAgent = navigator.userAgent
+        if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
+            return "Chrome"
+        }
+        if (userAgent.includes("Firefox")) {
+            return "Firefox"
+        }
+        if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+            return "Safari"
+        }
+        if (userAgent.includes("Edg")) {
+            return "Edge"
+        }
+        return "Unknown"
+    }
 
     function handleKeyDown(e) {
         if (e.key === 'Enter') {
@@ -50,7 +86,12 @@ function App() {
         }
         return
     }
+
     useEffect(() => {
+        if (currentRow === 6) {
+            isGameOver(true)
+            localStorage.setItem('gameover', JSON.stringify(true))
+        }
         if (!disableInput && !keyboardonly) {
             window.addEventListener('keydown', handleKeyDown)
         }        
@@ -58,6 +99,19 @@ function App() {
             window.removeEventListener('keydown', handleKeyDown)
         }
     }, [currentCol, currentRow, disableInput, keyboardonly])
+
+    useEffect(()=> {
+        if (JSON.parse(localStorage.getItem('keyboardcolor'))) {
+            setTimeout(() => {
+                setkeyboardColor(JSON.parse(localStorage.getItem('keyboardcolor')))
+                setdisableInput(false)
+            }, 1800)
+        }
+        if (gameOver) {
+            setShowGamePopup(true)
+            setMessagetoShow(currentWord.toUpperCase())
+        }
+    }, [])
 
     function determineColor(letter, colIndex, rowIndex) {
         if (letter.length === 0) {
@@ -96,6 +150,7 @@ function App() {
                     return
                 }
                 else if (word === currentWord) {
+                    localStorage.setItem('guess', JSON.stringify(guesses))
                     if (currentRow === 0) {
                         setMessagetoShow("Genius")
                     }
@@ -120,6 +175,7 @@ function App() {
                     setdisableInput(true)
                     setTimeout(() => {
                         isGameOver(true)
+                        localStorage.setItem('gameover', JSON.stringify(true))
                     },3600)
                     setTimeout(()=> {
                         setShowGamePopup(true)
@@ -129,6 +185,7 @@ function App() {
                     }, 5000)
                 }
                 else {
+                    localStorage.setItem('guess', JSON.stringify(guesses))
                     setTimeout(() => {
                         setdisableInput(false)
                         word.split('').forEach((letter, colIndex) => {
@@ -141,12 +198,14 @@ function App() {
                                 } else {
                                     newobj[letter.toLowerCase()] = 'gray'
                                 }
+                                localStorage.setItem('keyboardcolor', JSON.stringify(newobj))
                                 return newobj
                             })
                         })
                     },1800)
                     setdisableInput(true)
                 }
+                localStorage.setItem('currentrow', currentRow+1)
                 setCurrentRow(currentRow + 1)
                 setCurrentCol(0)
                 
@@ -209,6 +268,7 @@ function App() {
                         </div>
                         <button onClick={() => {
                             setHardMode(!hardmode)
+                            localStorage.setItem('hardmode', JSON.stringify(!hardmode))
                             setHardModeInteracted(true)
                         }} className={hardmode ? "greenbutton" : "graybutton"}>
                             <div className='circle'></div>
@@ -221,6 +281,7 @@ function App() {
                         </div>
                         <button onClick={() => {
                             setkeyboardonly(!keyboardonly)
+                            localStorage.setItem('keyboardonly', JSON.stringify(!keyboardonly))
                             setKeyboardOnlyInteracted(true)
                         }} className={keyboardonly ? "greenbutton" : "graybutton"}>
                              <div className ='circle'></div>
@@ -290,12 +351,11 @@ function App() {
             <p><b>U</b> is not in the word in any spot.</p>
             </div>
             <div className="howplayfooter">
-                <button>
-                    Questions?
-                </button>
-                <button>
+                <div>
+                    </div>
+                    <button onClick={reportBug}>
                     Report a Bug
-                </button>
+                    </button>              
             </div>
             </div>
         
