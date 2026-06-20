@@ -353,7 +353,8 @@
   
 .overlay {
     /* pixels away from anchor so here 0 pixel away from left:0" */
-    transform: translateX(0px);      
+    transform: translateX(0px);    
+    z-index:1;  
 }
   
 .overlayHidden {
@@ -491,7 +492,7 @@
     align-items:center;
     z-index:2;
 }
-.settingspopup {
+.settingspopup, .statisticpopup, .howplaypopup {
     background-color:white;
     left:50%;
     top:50%;
@@ -506,9 +507,7 @@
 
 
 
-
 }
-
 
 .settingstext {
     font-weight:700;
@@ -588,4 +587,185 @@
 
 .greenbutton .circle {
     transform: translateX(13px);
+}
+
+.statisticclosebutton, .Showhowplayclosebutton {
+    display:flex;
+    width:100%;
+    justify-content:end;
+}
+
+.statisticpopup {
+    padding-left:30px;
+}
+.statisticbody {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+}
+
+.statistictext {
+    font-weight:700;
+    font-size:26px;
+    font-family: 'Saira Condensed';
+}
+
+.statistictrack {
+    margin-bottom:20px;
+    font-weight:700; 
+    font-family: 'Saira Condensed';
+    font-size:30px;
+    width:260px;
+}
+
+
+.statisticaccess {
+    font-weight:300;
+    font-size:18px;
+    font-family:'Inter';
+    width:360px;
+}
+
+
+.createfreebutton {
+    font-size:16px;
+    font-family:'Inter';
+    font-weight:500;
+    background-color:white;
+    color:#121213;
+    border:none;
+    border-radius:1.5em;
+    padding:0 2em;
+    height:3em;
+    letter-spacing:.01em;
+    cursor:pointer;
+    margin-bottom:50px;
+    margin-top:30px;
+
+
+
+}
+
+
+
+.footer {
+    position:fixed;
+    bottom:20px;
+    display:flex;
+    color:white;
+    gap:5px;
+    align-items:center;
+    flex-wrap:wrap;
+    justify-content:center;
+
+}
+
+.footer a {
+    text-decoration:none;
+    font-size:11px;
+
+}
+
+.footer div {
+    font-size:20px;
+}
+
+
+.howplaypopup  {
+    gap:20px;
+    padding-left:40px;
+    padding-bottom:60px;
+}
+
+.howplay {
+    font-weight:700;
+    font-size:25px;
+    font-family: 'Saira Condensed';
+
+}
+
+
+.guess6 {
+    font-weight:500;
+    font-size:20px;
+    font-family: 'Saira Condensed';
+
+}
+ul {
+    margin:0;
+    font-family: 'Saira Condensed';
+    font-size:17px;
+    width:400px;
+
+
+}
+
+.rogue, .examples, .light {
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.examples span {
+    font-size:16px;
+    font-weight:bold;
+
+
+}
+
+.rogue p, .examples p, .light p {
+    font-size:15px;
+    font-family:'Inter';
+
+}
+
+.wordy {
+    display:flex;
+    gap:5px;
+
+}
+
+.wordy div {
+    background-color:#121213;
+    height:32px;
+    width:32px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border: 2px solid #565758;
+    font-size:25px;
+    font-family:'Inter';
+    font-weight: bold;
+
+}
+
+.wordy .W {
+    background-color:#538d4e;
+    border: 2px solid #538d4e;
+}
+
+.wordy .L {
+    background-color:#b59f3b;
+    border: 2px solid #b59f3b;
+}
+
+.wordy .U {
+    background-color: #3a3a3c;
+    border: 2px solid #3a3a3c;
+}
+
+
+.howplayfooter {
+    font-family:'Inter';
+    font-size:13px;
+    display:flex;
+    justify-content:space-between;
+    text-decoration:underline;
+}
+
+.howplayfooter button {
+    all:unset;
+    cursor:pointer;
 }

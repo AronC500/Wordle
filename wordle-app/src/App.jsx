@@ -51,13 +51,13 @@ function App() {
         return
     }
     useEffect(() => {
-        if (!disableInput) {
+        if (!disableInput && !keyboardonly) {
             window.addEventListener('keydown', handleKeyDown)
         }        
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
         }
-    }, [currentCol, currentRow, disableInput])
+    }, [currentCol, currentRow, disableInput, keyboardonly])
 
     function determineColor(letter, colIndex, rowIndex) {
         if (letter.length === 0) {
@@ -239,12 +239,96 @@ function App() {
         }
         {showHowPlay &&
         <div className="settingsbackground">
+            <div className="howplaypopup">
+            <div className="Showhowplayclosebutton">     
+                <button className="closebutton" onClick={()=> {
+                        setdisableInput(false)
+                        setShowHowPlay(false)
+                    }}>
+                    <img  style={{height:"40px", width:"40px"}}src="/Xbutton.png"/>
+                </button>
+                </div>
             <div>
+                <div className="howplay">How To Play</div>
+                <div className="guess6">Guess the Wordle in 6 tries. </div>
             </div>
+            <div>
+                <ul>
+                    <li>Each guess must be a valid 5-letter word.</li>
+                    <li>The color of the tiles will change to show how close your guess was to the word.</li>
+                </ul>
+            </div>
+            <div className="examples">
+                <span>Examples</span>
+                <div className="wordy">
+                    <div className="W">W</div>
+                    <div>O</div>
+                    <div>R</div>
+                    <div>D</div>
+                    <div>Y</div>
+                </div>
+                <p><b>W </b>is in the word and in the correct spot.</p>
+            </div>
+            <div className="light">
+            <div className="wordy">
+                    <div className="L">L</div>
+                    <div>I</div>
+                    <div>G</div>
+                    <div>H</div>
+                    <div>T</div>
+            </div>                    
+                <p><b>I</b> is in the word but in the wrong spot.</p>
+            </div>
+            <div className="rogue">
+            <div className="wordy">
+                    <div >R</div>
+                    <div>O</div>
+                    <div>G</div>
+                    <div className="U">U</div>
+                    <div>E</div>
+            </div>                       
+            <p><b>U</b> is not in the word in any spot.</p>
+            </div>
+            <div className="howplayfooter">
+                <button>
+                    Questions?
+                </button>
+                <button>
+                    Report a Bug
+                </button>
+            </div>
+            </div>
+        
+
         </div>
         }
         {showStatistics &&
-        <div>
+        <div className="settingsbackground">
+            <div className="statisticpopup">
+                <div className="statisticclosebutton">     
+                <button className="closebutton" onClick={()=> {
+                        setdisableInput(false)
+                        setShowStatistics(false)
+                    }}>
+                    <img  style={{height:"40px", width:"40px"}}src="/Xbutton.png"/>
+                </button>
+                </div>
+                <div className="statistictext">
+                    Statistics
+                </div>
+                <div className="statisticbody">
+                    <img style={{height:"300px", width:"220px"}}src="/statistic.png"/>
+                    <div className="statistictrack">
+                        Track your status and view badges.
+                    </div>
+                    <div className="statisticaccess">
+                        Access your Wordle badges, win percentage and more with a free account.
+                    </div>
+                    <button onClick={()=> navigate('/login')}className="createfreebutton">
+                        Create a free account
+                    </button>
+                </div>
+            </div>
         </div>
         
         }
@@ -344,7 +428,23 @@ function App() {
 
         </div>
        </div>
-
+        <div className="footer">
+                <a>&copy; The Aron Times Company</a>
+                <div>|</div>
+                <a>AronTimes.com</a>
+                <div>|</div>
+                <a>Sitemap</a>
+                <div>|</div>
+                <a>Privacy Policy</a>
+                <div>|</div>
+                <a>Terms of Service</a>
+                <div>|</div>
+                <a>Cookie Policy</a>
+                <div>|</div>
+                <a>Terms of Sale</a>
+                <div>|</div>
+                <a>Your Privacy Choices</a>
+        </div>
     </div>
     )
   }
