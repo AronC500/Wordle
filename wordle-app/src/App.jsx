@@ -2,9 +2,7 @@ import {useState, useEffect} from 'react'
 import './App.css'
 import { validWords, answerList } from './wordlist.js'
 import {useNavigate} from 'react-router-dom'
-//can turn off hard mode if row === 0. also need to do hard mode error msg when u dont use one of the previous letters.
-//need to do message pop up when u didnt get the word that shows the word at end. need to implement hard mode logic. need check if msg of word
-//pop up if u got it correct. error message when in hard mode and cantt turn it off .
+
 function App() {
     const startDate = new Date(2021,5,19)
     const today = new Date()
@@ -20,18 +18,20 @@ function App() {
         ['', '', '', '', ''],
         ['', '', '', '', ''],
         ['', '', '', '', ''],
-    ])    
+    ])      
+
     const [currentRow, setCurrentRow] = useState(Number(localStorage.getItem('currentrow')) || 0)
+    const [justWon, setJustWon] = useState(false)
     const [currentCol, setCurrentCol] = useState(0)
-    const [disableInput, setdisableInput] = useState(true)
+    const [disableInput, setdisableInput] = useState(JSON.parse(localStorage.getItem('gameover')) || false)
     const [showGamePopup, setShowGamePopup] = useState(false)
     const [MessagetoShow, setMessagetoShow] = useState('')
     const [gameOver, isGameOver] = useState(JSON.parse(localStorage.getItem('gameover')) || false)
-    const [winRow, setwinRow] = useState(null)
-    const [keyboardColor, setkeyboardColor] = useState( {})
+    const [winRow, setwinRow] = useState(localStorage.getItem('winrow') === null ? null : Number(localStorage.getItem('winrow')))
+    const [keyboardColor, setkeyboardColor] = useState({})
     const [showSettings, setShowSettings] = useState(false)
     const [showStatistics, setShowStatistics] = useState(false)
-    const [showHowPlay ,setShowHowPlay] = useState(false)
+    const [showHowPlay, setShowHowPlay] = useState(localStorage.getItem('howplay') === null)
     const [hardmode, setHardMode] = useState(JSON.parse(localStorage.getItem('hardmode')) || false)
     const [keyboardonly, setkeyboardonly] = useState(JSON.parse(localStorage.getItem('keyboardonly')) || false)
     const keyboard = [
@@ -39,6 +39,28 @@ function App() {
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
         ['ENTER','Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE']
     ]
+    function resetGameState() {
+        localStorage.removeItem('guess')
+        localStorage.removeItem('currentrow')
+        localStorage.removeItem('winrow')
+        localStorage.removeItem('gameover')
+        localStorage.removeItem('keyboardcolor')
+
+        setGuesses([
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+        ])
+        setCurrentRow(0)
+        setwinRow(null)
+        isGameOver(false)
+        setkeyboardColor({})
+        setdisableInput(false)
+    }    
+
     function reportBug() {
         const deviceSummary = `
 
@@ -86,12 +108,7 @@ function App() {
         }
         return
     }
-
     useEffect(() => {
-        if (currentRow === 6) {
-            isGameOver(true)
-            localStorage.setItem('gameover', JSON.stringify(true))
-        }
         if (!disableInput && !keyboardonly) {
             window.addEventListener('keydown', handleKeyDown)
         }        
@@ -99,20 +116,66 @@ function App() {
             window.removeEventListener('keydown', handleKeyDown)
         }
     }, [currentCol, currentRow, disableInput, keyboardonly])
-
     useEffect(()=> {
         if (JSON.parse(localStorage.getItem('keyboardcolor'))) {
             setTimeout(() => {
-                setkeyboardColor(JSON.parse(localStorage.getItem('keyboardcolor')))
-                setdisableInput(false)
+                const saved = JSON.parse(localStorage.getItem('keyboardcolor'))
+                if (saved) {
+                    setkeyboardColor(saved)
+                }                
+                if (!gameOver) {
+                    setdisableInput(false)
+                }            
             }, 1800)
         }
         if (gameOver) {
-            setShowGamePopup(true)
-            setMessagetoShow(currentWord.toUpperCase())
+            if (winRow === null) {
+                setShowGamePopup(true)
+                setMessagetoShow(currentWord.toUpperCase())
+            }
+            
         }
-    }, [])
+        localStorage.setItem('howplay', true)
+        const savedPuzzleNumber = localStorage.getItem('puzzleNumber')
+        if (Number(savedPuzzleNumber) !== daysDifference) {
+                localStorage.setItem('puzzleNumber', daysDifference)
+                resetGameState()
+        }
 
+
+    }, [])
+    localStorage.clear()
+    function getGreenPositions() {
+        const greenPositions = []
+            for (let r = 0; r < currentRow; r++) {
+                for (let c = 0; c < 5; c++) {
+                    const letter = guesses[r][c].toLowerCase()
+                    if (letter && letter === currentWord[c]) {
+                        greenPositions.push({ position: c, letter })
+                    }
+                }
+            }
+        return greenPositions
+    }
+    function determineKeyboardColor(word) {
+        word.split('').forEach((letter, colIndex) => {
+            setkeyboardColor(prev => {
+                const newobj = {...prev}
+                if (newobj[letter.toLowerCase()] === 'green') {
+                    return newobj
+                }
+                if (letter.toLowerCase() === currentWord[colIndex]) {
+                    newobj[letter.toLowerCase()] = 'green'
+                } else if (currentWord.includes(letter.toLowerCase())) {
+                    newobj[letter.toLowerCase()] = 'yellow'
+                } else {
+                    newobj[letter.toLowerCase()] = 'gray'
+                }
+                localStorage.setItem('keyboardcolor', JSON.stringify(newobj))
+                return newobj
+            })
+        })
+    }
     function determineColor(letter, colIndex, rowIndex) {
         if (letter.length === 0) {
             return "letter"
@@ -135,6 +198,7 @@ function App() {
             return
         }
         if (currentCol === 5) {
+            let hardModeFail = false
             if (letter === 'ENTER' && currentRow !== 6) {
                 const word = guesses[currentRow].join('').toLowerCase();
                 if (!validWords.includes(word)) {
@@ -170,9 +234,12 @@ function App() {
                         setMessagetoShow("Phew")
                     }
                     setTimeout(() => {
+                        determineKeyboardColor(word)
                         setwinRow(currentRow)
+                        localStorage.setItem('winrow', currentRow)
                     },1800)
                     setdisableInput(true)
+                    setJustWon(true)
                     setTimeout(() => {
                         isGameOver(true)
                         localStorage.setItem('gameover', JSON.stringify(true))
@@ -185,29 +252,92 @@ function App() {
                     }, 5000)
                 }
                 else {
-                    localStorage.setItem('guess', JSON.stringify(guesses))
+                    if (hardmode) {
+                    
+                        const greenPositions = getGreenPositions()
+                        for (let i = 0; i < greenPositions.length; i++) {
+                            const position = greenPositions[i].position
+                            const letter = greenPositions[i].letter
+                            if (word[position] !== letter) {
+                                let lastcoupleletters
+                                switch(position + 1) {
+                                    case 1:
+                                        lastcoupleletters = 'st'
+                                        break
+                                    case 2:
+                                        lastcoupleletters = 'nd'
+                                        break
+                                    case 3:
+                                        lastcoupleletters = 'rd'
+                                        break
+                                    case 4:
+                                        lastcoupleletters = 'th'
+                                        break
+                                    case 5:
+                                        lastcoupleletters = 'th'
+                                        break
+                                }
+                                setShowGamePopup(true)
+                                setShakeRow(currentRow)
+                                setMessagetoShow(`${position + 1}${lastcoupleletters} letter must be ${letter.toUpperCase()}`)
+                                hardModeFail = true
+                                break
+                            }
+                        }
+                    
+                        if (!hardModeFail) {
+                            const keyboardEntries = Object.entries(keyboardColor)
+                            for (let i = 0; i < keyboardEntries.length; i++) {
+                                const key = keyboardEntries[i][0]
+                                const value = keyboardEntries[i][1]
+                                if (value === 'yellow' && !word.includes(key)) {
+                                    setShowGamePopup(true)
+                                    setShakeRow(currentRow)
+                                    setMessagetoShow(`Guess must contain ${key.toUpperCase()}`)
+                                    hardModeFail = true
+                                    break
+                                }
+                            }
+                        }
+                    
+                        if (hardModeFail) {
+                            setTimeout(() => {
+                                setShakeRow(null)
+                            }, 500)
+                            setTimeout(() => {
+                                setShowGamePopup(false)
+                            }, 2000)
+                        }
+                    }
+                    if (!hardModeFail) {
+                        localStorage.setItem('guess', JSON.stringify(guesses))
                     setTimeout(() => {
                         setdisableInput(false)
-                        word.split('').forEach((letter, colIndex) => {
-                            setkeyboardColor(prev => {
-                                const newobj = {...prev}
-                                if (letter.toLowerCase() === currentWord[colIndex]) {
-                                    newobj[letter.toLowerCase()] = 'green'
-                                } else if (currentWord.includes(letter.toLowerCase())) {
-                                    newobj[letter.toLowerCase()] = 'yellow'
-                                } else {
-                                    newobj[letter.toLowerCase()] = 'gray'
-                                }
-                                localStorage.setItem('keyboardcolor', JSON.stringify(newobj))
-                                return newobj
-                            })
-                        })
+                        determineKeyboardColor(word)
+
+                        if (currentRow + 1 === 6) {
+                            setTimeout(()=> {
+                                isGameOver(true)
+                                setShowGamePopup(true)
+                                setMessagetoShow(currentWord.toUpperCase())
+                                localStorage.setItem('gameover', JSON.stringify(true))
+
+                            }, 700)
+                        }
                     },1800)
                     setdisableInput(true)
+
+                    }
+                    
                 }
-                localStorage.setItem('currentrow', currentRow+1)
-                setCurrentRow(currentRow + 1)
-                setCurrentCol(0)
+                if (!hardModeFail) {
+                    localStorage.setItem('currentrow', currentRow+1)
+                    setCurrentRow(currentRow + 1)
+                    setCurrentCol(0)
+                    sethardmodereq(false)
+
+                }
+
                 
                 
             }
@@ -267,6 +397,22 @@ function App() {
                             <div className="settingsmalltext">Any revealed hints must be used in subsequent guesses</div>
                         </div>
                         <button onClick={() => {
+                            if (!hardmode) {
+                                if (currentRow > 0 || justWon) {
+                                    setShowGamePopup(true)
+                                    setMessagetoShow("Hard mode can only be enabled at the start of a round")
+                                    setTimeout(() => {
+                                        setShowGamePopup(false)
+                                    }, 1500)
+                                    if (gameOver && winRow === null) {
+                                        setTimeout(()=> {
+                                            setShowGamePopup(true)
+                                            setMessagetoShow(currentWord.toUpperCase())
+                                        }, 1500)
+                                    }
+                                    return
+                                }
+                            }
                             setHardMode(!hardmode)
                             localStorage.setItem('hardmode', JSON.stringify(!hardmode))
                             setHardModeInteracted(true)
@@ -289,7 +435,7 @@ function App() {
                     </div>
                     <div className="individual" style={{border:"none"}}>
                         <div className="settingsmalltext">&copy; 2026 The Aron Times Company</div>
-                        <div className="settingsmalltext">#1</div>
+                        <div className="settingsmalltext">#{daysDifference}</div>
                     </div>
 
                 </div>
@@ -379,7 +525,7 @@ function App() {
                 <div className="statisticbody">
                     <img style={{height:"300px", width:"220px"}}src="/statistic.png"/>
                     <div className="statistictrack">
-                        Track your status and view badges.
+                        Track your stats and view badges.
                     </div>
                     <div className="statisticaccess">
                         Access your Wordle badges, win percentage and more with a free account.
@@ -430,7 +576,7 @@ function App() {
         {guesses.map((row, rowIndex) => (
             <div key={rowIndex} className={shakeRow === rowIndex ? "wordanimation" : "word"}> 
             {row.map((letter, colIndex) => (
-                <div key={letter === '' ? `${rowIndex}${colIndex}` :`${rowIndex}${colIndex}${letter}`} className={winRow === rowIndex ? 'jump' : determineColor(letter, colIndex, rowIndex)} style={{ animationDelay: `${colIndex * 0.3}s` }}>
+                <div key={letter === '' ? `${rowIndex}${colIndex}` :`${rowIndex}${colIndex}${letter}`} className={winRow === rowIndex && justWon? 'jump' : determineColor(letter, colIndex, rowIndex)} style={{ animationDelay: `${colIndex * 0.3}s` }}>
                     {letter}
                 </div>
             ))}
