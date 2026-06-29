@@ -9,11 +9,36 @@ function ForgotPassword() {
     const [input, setInput] = useState('')
     const [showPopUp, setShowPopUp] = useState(false)
     const [invalidCode, SetinvalidCode] = useState(false)
+    const [verificationCode, setVerificationcode] = useState('')
+    const [verificationExpire, setVerificationExpire] = useState('')
+
+    async function sendVerificationCode() {
+        const response = await fetch('http://localhost:3000/verification', {
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email})
+        })
+        const data = await response.json()
+        if (response.status === 404) {
+            console.log(response.error)
+            return
+        }
+        if (data?.verificationCode) {
+            setVerificationcode(data.verificationCode)
+            setVerificationExpire(data.expiresAt)
+        }
+    }
     useEffect(() => {
         if (!email) {
             navigate('/login')
+            return
         }
+        sendVerificationCode()
+       
     }, [])
+
     function checkInputs(e) {
         SetinvalidCode(false)
         if (isNaN(Number(e.target.value))) {
@@ -28,16 +53,22 @@ function ForgotPassword() {
 
     function requestCode() {
         setShowPopUp(true)
+        sendVerificationCode();
 
     }
     function submitCode() {
-        if (testcode === input) {
-            navigate('/login/password/SetNewPassword', {state:{email:email}})
-            return
-        }
-        SetinvalidCode(true)
+        const isNotExpired = new Date(verificationExpire) > new Date();
+        const isValid = verificationCode === input && isNotExpired;
 
+        if (isValid) {
+            navigate("/login/password/SetNewPassword", {
+                state: { email }
+            });
+            return;
+        }
+        SetinvalidCode(true);
     }
+
     return (
         <div className="forgotpasswordbackground">
             <div className="headingtext">
