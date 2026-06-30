@@ -3,8 +3,6 @@ import {useNavigate, useLocation} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 
 function Password() {
-    const testEmail = 'gg@gmail.com'
-    const testpassword = '623456150'
     const location = useLocation()
     const email =  location.state?.email || ''
     const [passText, setPassText] = useState('Show')
@@ -17,13 +15,34 @@ function Password() {
             navigate('/login')
         }
     }, [])
-    function LogIn() {
-        if (password === testpassword && testEmail === email) {
+
+
+
+    async function LogIn() {
+        const response = await fetch(`http://localhost:3000/login`, {
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email,password})
+        })
+        if (response.status=== 500 || response.status === 404) {
+            console.log(response.error)
+            return
+        }
+        if (response.status === 401) {
+            console.log(response.error)
+            setisInvalid(true)
+            return
+
+        }
+        const data = await response.json()
+        if (response.ok) {
+            localStorage.setItem('user', JSON.stringify(data))
             setisInvalid(false)
             navigate('/game')
             return
         }
-        setisInvalid(true)
     }
     function showText() {
         setShow(!show)
@@ -59,9 +78,9 @@ function Password() {
                     <input maxLength={255} type={show ? 'text' : 'password'} onChange = {(e) => setPassword(e.target.value)}/>
                     <button onClick = {showText} className="pPasswordEdit">{passText}</button>
                 </div>
-                <a onClick={()=> navigate('/login/password/forgot', {state: {email}})} className="forgot">Forgot your password?</a>
+                <a onClick={()=> navigate('/login/password/forgot', {state: {email, sendCode: true}})} className="forgot">Forgot your password?</a>
             </div>
-            {isInvalid && <div className="errormessage">The email address or password you entered is incorrect. Please try again. </div>}
+            {isInvalid && <div className="errormessage">The password you entered is incorrect. Please try again. </div>}
             <div className="buttons">
                 <button onClick = {LogIn} className="loginPass">Log in</button>
                 <button className="code">Email me a one-time code</button>

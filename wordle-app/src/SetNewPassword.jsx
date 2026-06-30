@@ -5,15 +5,16 @@ function NewPassword() {
     const location = useLocation()
     const navigate = useNavigate()
     const email = location.state?.email
-    const testOldPassword = '2521552'
     const [passText, setPassText] = useState('Show')
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
     const [errorMessage, setErrorMessage]  = useState('')
     const [isInvalid, setisInvalid] = useState(false)
+
     useEffect(() => {
         if (!email) {
             navigate('/login')
+
         }
     }, [])
 
@@ -28,17 +29,44 @@ function NewPassword() {
 
     }
 
-    function checkPassword() {
-        if (password === testOldPassword) {
+    async function checkPassword() {
+        const response = await fetch('http://localhost:3000/login', {
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({password,email})
+            })
+        if (response.status === 500) {
+            console.log(response.error) 
+            return
+        }
+        if (response.status === 200) {
+            console.log(response.error)
             setErrorMessage("Your new password must be different than your previous password.")
             setisInvalid(true)
+            return
+
         }
         else if (password.length < 6) {
             setErrorMessage("This password must be at least six characters long.")
             setisInvalid(true)
         }
         else {
-            navigate('/login/password/SetNewPassword/UpdatedPass', {state: {email: email}})
+            const response = await fetch('http://localhost:3000/newPassword', {
+                method:"PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({password,email})
+            })
+            if (response.status === 500) {
+                console.log(response.error) 
+                return
+            }
+            if (response.ok) {
+                navigate('/login/password/SetNewPassword/UpdatedPass', {state: {email: email}})
+            }
 
         }
     }
@@ -56,7 +84,7 @@ function NewPassword() {
             </div>
             <div className="password">
                     <div>Password</div>
-                    <input className= {isInvalid ? 'inputInvalid': 'inputNormal'} type={show ? 'text' : 'password'} onChange = {InputChange}/>
+                    <input     maxLength={255} className= {isInvalid ? 'inputInvalid': 'inputNormal'} type={show ? 'text' : 'password'} onChange = {InputChange}/>
                     <button onClick = {showText} className="pPasswordEdit">{passText}</button>
                 {isInvalid &&
                 <div className="setnewpassworderror">

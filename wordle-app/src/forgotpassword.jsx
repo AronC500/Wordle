@@ -3,30 +3,28 @@ import {useLocation, useNavigate} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 function ForgotPassword() {
     const navigate = useNavigate()
-    const testcode = '234567'
     const location = useLocation()
     const email = location.state?.email
     const [input, setInput] = useState('')
     const [showPopUp, setShowPopUp] = useState(false)
     const [invalidCode, SetinvalidCode] = useState(false)
-    const [verificationCode, setVerificationcode] = useState('')
     const [verificationExpire, setVerificationExpire] = useState('')
+    const [sendCode, setSendCode] = useState(location.state?.sendCode)
 
     async function sendVerificationCode() {
         const response = await fetch('http://localhost:3000/verification', {
-            method:"POST",
+            method:"PATCH",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({email})
         })
         const data = await response.json()
-        if (response.status === 404) {
+        if (response.status === 500 || response.status === 404) {
             console.log(response.error)
             return
         }
-        if (data?.verificationCode) {
-            setVerificationcode(data.verificationCode)
+        if (response.ok) {
             setVerificationExpire(data.expiresAt)
         }
     }
@@ -37,7 +35,7 @@ function ForgotPassword() {
         }
         sendVerificationCode()
        
-    }, [])
+    }, [sendCode])
 
     function checkInputs(e) {
         SetinvalidCode(false)
@@ -52,21 +50,30 @@ function ForgotPassword() {
     }
 
     function requestCode() {
+        setSendCode(!sendCode)
         setShowPopUp(true)
         sendVerificationCode();
 
     }
-    function submitCode() {
+    async function submitCode() {
         const isNotExpired = new Date(verificationExpire) > new Date();
-        const isValid = verificationCode === input && isNotExpired;
-
-        if (isValid) {
+        const response = await fetch('http://localhost:3000/verification', {
+            method:'GET'
+        })
+        if (response.status === 500) {
+            console.log(response.error)
+        }
+        const data = await response.json()
+        if (data.success && isNotExpired) {
             navigate("/login/password/SetNewPassword", {
                 state: { email }
             });
             return;
+
         }
-        SetinvalidCode(true);
+        else {
+            SetinvalidCode(true);
+        }
     }
 
     return (
