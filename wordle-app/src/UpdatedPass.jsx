@@ -5,11 +5,32 @@ function UpdatedPass() {
     const navigate = useNavigate()
     const location = useLocation()
     const email = location.state?.email
+    navigate('/login')
+
     useEffect(() => {
         if (!email) {
-            navigate('/login')
         }
     }, [])
+    async function continueButton() {
+        const response = await fetch(`http://localhost:3000/login/${encodeURIComponent(email)}`, {
+            method: 'GET'
+        })
+
+        if (response.status === 404 || response.status === 500) {
+            console.log(response.error)
+            return
+        }
+
+        const data = await response.json()
+        if (response.ok) {     
+            localStorage.setItem('user', JSON.stringify(data))
+            navigate('/game')
+        }
+
+
+    }
+
+
     return (
         <div>
             <div className="UpdatedPassText">
@@ -19,7 +40,7 @@ function UpdatedPass() {
                 </div>
             </div>
             <div className="submit">
-                <button onClick={()=> navigate('/game')} className="submitbutton">Continue</button>
+                <button onClick={continueButton} className="submitbutton">Continue</button>
             </div>
             
         </div>

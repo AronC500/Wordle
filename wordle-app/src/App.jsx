@@ -4,36 +4,51 @@ import { validWords, answerList } from './wordlist.js'
 import {useNavigate} from 'react-router-dom'
 
 function App() {
-    const startDate = new Date(2021,5,19)
-    const today = new Date()
-    const daysDifference = Math.floor((today-startDate) / (1000*60*60*24))
-    const currentWord = answerList[daysDifference % answerList.length]
-    const [shakeRow, setShakeRow] = useState(null)
-    const navigate = useNavigate()
-    const [showBurger, setShowBurger] = useState(false)
-    const [guesses, setGuesses] = useState(JSON.parse(localStorage.getItem('guess')) || [
-        ['', '', '', '', ''],
-        ['', '', '', '', ''],
-        ['', '', '', '', ''],
-        ['', '', '', '', ''],
-        ['', '', '', '', ''],
-        ['', '', '', '', ''],
-    ])      
+        const startDate = new Date(2021,5,19)
+        const today = new Date()
+        const daysDifference = Math.floor((today-startDate) / (1000*60*60*24))
+        const currentWord = answerList[daysDifference % answerList.length]
+        const [shakeRow, setShakeRow] = useState(null)
+        const navigate = useNavigate()
+        const [showBurger, setShowBurger] = useState(false)
+    
+        const isLoggedIn = localStorage.getItem('user') !== null 
+    
+        const [guesses, setGuesses] = useState(isLoggedIn? 
+            [
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+            ]
+            : JSON.parse(localStorage.getItem('guess')) || 
+            [
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+            ]
+        )
 
-    const [currentRow, setCurrentRow] = useState(Number(localStorage.getItem('currentrow')) || 0)
-    const [justWon, setJustWon] = useState(false)
-    const [currentCol, setCurrentCol] = useState(0)
-    const [disableInput, setdisableInput] = useState(JSON.parse(localStorage.getItem('gameover')) || false)
-    const [showGamePopup, setShowGamePopup] = useState(false)
-    const [MessagetoShow, setMessagetoShow] = useState('')
-    const [gameOver, isGameOver] = useState(JSON.parse(localStorage.getItem('gameover')) || false)
-    const [winRow, setwinRow] = useState(localStorage.getItem('winrow') === null ? null : Number(localStorage.getItem('winrow')))
-    const [keyboardColor, setkeyboardColor] = useState({})
-    const [showSettings, setShowSettings] = useState(false)
-    const [showStatistics, setShowStatistics] = useState(false)
-    const [showHowPlay, setShowHowPlay] = useState(localStorage.getItem('howplay') === null)
-    const [hardmode, setHardMode] = useState(JSON.parse(localStorage.getItem('hardmode')) || false)
-    const [keyboardonly, setkeyboardonly] = useState(JSON.parse(localStorage.getItem('keyboardonly')) || false)
+        const [currentRow, setCurrentRow] = useState(isLoggedIn ? 0 : Number(localStorage.getItem('currentrow')) || 0)
+        const [justWon, setJustWon] = useState(false)
+        const [currentCol, setCurrentCol] = useState(0)
+        const [disableInput, setdisableInput] = useState(isLoggedIn ? true : JSON.parse(localStorage.getItem('gameover')) || false)
+        const [showGamePopup, setShowGamePopup] = useState(false)
+        const [MessagetoShow, setMessagetoShow] = useState('')
+        const [gameOver, isGameOver] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('gameover')) || false)
+        const [winRow, setwinRow] = useState(isLoggedIn ? null : (localStorage.getItem('winrow') === null ? null : Number(localStorage.getItem('winrow'))))
+        const [keyboardColor, setkeyboardColor] = useState({})
+        const [showSettings, setShowSettings] = useState(false)
+        const [showStatistics, setShowStatistics] = useState(false)
+        const [showHowPlay, setShowHowPlay] = useState(localStorage.getItem('howplay') === null)
+        const [hardmode, setHardMode] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('hardmode')) || false)
+        const [keyboardonly, setkeyboardonly] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('keyboardonly')) || false)
+        const [user, setUser] = useState(null)
     const keyboard = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
@@ -78,6 +93,29 @@ function App() {
 
         window.location.href = `mailto:aronchen500@gmail.com?subject=${subject}&body=${body}`
     }
+
+    async function saveSetting(localKey, value, dbField) {
+        if (user) {
+            const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ 
+                    [dbField]: value 
+                })
+            })
+            if (!response.ok) {
+                console.log(response.error)
+                return
+            }
+            const data = await response.json()
+            setUser(data)
+            localStorage.setItem('user', JSON.stringify(data))
+        } else {
+            localStorage.setItem(localKey, JSON.stringify(value))
+        }
+    }
     
     function getBrowserName() {
         const userAgent = navigator.userAgent
@@ -97,6 +135,7 @@ function App() {
     }
 
     function handleKeyDown(e) {
+
         if (e.key === 'Enter') {
             keyPress('ENTER')
         }
@@ -116,42 +155,119 @@ function App() {
             window.removeEventListener('keydown', handleKeyDown)
         }
     }, [currentCol, currentRow, disableInput, keyboardonly])
+
     useEffect(()=> {
-        if (JSON.parse(localStorage.getItem('keyboardcolor'))) {
-            setTimeout(() => {
-                const saved = JSON.parse(localStorage.getItem('keyboardcolor'))
-                if (saved) {
-                    setkeyboardColor(saved)
-                }                
-                if (!gameOver) {
-                    setdisableInput(false)
-                }            
-            }, 1800)
-        }
-        if (gameOver) {
-            if (winRow === null) {
-                setShowGamePopup(true)
-                setMessagetoShow(currentWord.toUpperCase())
+        const storedUser = localStorage.getItem('user')
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null
+
+
+        if (parsedUser) {
+            setUser(parsedUser)
+            setHardMode(parsedUser.hardMode === null ? false : parsedUser.hardMode)
+            setkeyboardonly(parsedUser.keyboardOnly  === null ? false : parsedUser.keyboardOnly)
+            setdisableInput(true)
+            if (parsedUser.lastPuzzleNumber === daysDifference && parsedUser.gameState) {
+                const gameState = parsedUser.gameState
+                setGuesses(gameState.guesses)
+                setCurrentRow(gameState.currentRow)
+                setwinRow(gameState.winRow)
+                isGameOver(gameState.gameOver)
+                setTimeout(() => {
+                    setkeyboardColor(gameState.keyboardColor)
+                    if (!gameState.gameOver) {
+                        setdisableInput(false)
+                    }
+                }, 1800)
             }
-            
-        }
-        localStorage.setItem('howplay', true)
-        const savedPuzzleNumber = localStorage.getItem('puzzleNumber')
-        if (Number(savedPuzzleNumber) !== daysDifference) {
+            else {
+                saveGameState({ guesses: [...guesses], currentRow: 0, winRow: null, gameOver: false, keyboardColor: {} })
+                setdisableInput(false)
+
+            }
+        } else {
+            const saved = JSON.parse(localStorage.getItem('keyboardcolor'))
+            if (saved) {
+                setdisableInput(true)
+                if (gameOver) {
+                    setCurrentRow(6)
+
+                }
+                setTimeout(() => {
+                    setkeyboardColor(saved)
+                    if (!gameOver) {
+                        setdisableInput(false)
+                    }
+                }, 1800)
+            }
+            else {
+                setdisableInput(false)
+            }
+            localStorage.setItem('howplay', true)
+            const savedPuzzleNumber = localStorage.getItem('puzzleNumber')
+            if (Number(savedPuzzleNumber) !== daysDifference) {
                 localStorage.setItem('puzzleNumber', daysDifference)
                 resetGameState()
+            }
         }
 
+        if (gameOver || (parsedUser && parsedUser.gameState)) {
+            if (!winRow && currentRow !== winRow) {
+                setdisableInput(true)
+                setTimeout(()=>{
+                    setShowGamePopup(true)
+                    setMessagetoShow(currentWord.toUpperCase())
+                },1800) 
+            }
 
+            
+        }
+    
+
+      
     }, [])
-    localStorage.clear()
+
+
+    async function saveGameState(value = {}) {
+        const state = {
+            guesses,
+            currentRow,
+            winRow,
+            gameOver,
+            keyboardColor,
+            ...value
+        }
+    
+        if (user) {
+            const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({
+                    gameState: state,
+                    lastPuzzleNumber: daysDifference
+                })
+            })     
+            if (!response.ok)    {
+                console.log(response.error)
+            }      
+        } 
+        else {
+            localStorage.setItem('guess', JSON.stringify(state.guesses))
+            localStorage.setItem('currentrow', state.currentRow)
+            localStorage.setItem('winrow', state.winRow)
+            localStorage.setItem('gameover', JSON.stringify(state.gameOver))
+            localStorage.setItem('keyboardcolor', JSON.stringify(state.keyboardColor))
+            localStorage.setItem('puzzleNumber', daysDifference)
+        }
+    }
     function getGreenPositions() {
         const greenPositions = []
             for (let r = 0; r < currentRow; r++) {
                 for (let c = 0; c < 5; c++) {
                     const letter = guesses[r][c].toLowerCase()
-                    if (letter && letter === currentWord[c]) {
-                        greenPositions.push({ position: c, letter })
+                    if (letter === currentWord[c]) {
+                        greenPositions.push({ position: c, letter: letter })
                     }
                 }
             }
@@ -171,7 +287,11 @@ function App() {
                 } else {
                     newobj[letter.toLowerCase()] = 'gray'
                 }
-                localStorage.setItem('keyboardcolor', JSON.stringify(newobj))
+                if (user) {
+                    saveGameState({ keyboardColor: newobj }) 
+                } else {
+                    localStorage.setItem('keyboardcolor', JSON.stringify(newobj))
+                }
                 return newobj
             })
         })
@@ -192,6 +312,40 @@ function App() {
         else {
             return "gray"
         }
+    }
+
+    async function recordGameResult(won, guessCount) {
+        if (!user)  {
+            return 
+        }
+    
+        const updates = {
+            gamesPlayed: user.gamesPlayed + 1,
+            gamesWon: won ? user.gamesWon + 1 : user.gamesWon,
+            currentStreak: won ? user.currentStreak + 1 : 0,
+            maxStreak: won ? Math.max(user.maxStreak, user.currentStreak + 1) : user.maxStreak,
+            playedOnce: true
+        }
+
+        if (won) {
+            updates[`WonIN${guessCount}`] = user[`WonIN${guessCount}`] + 1
+        }
+    
+        const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+            method: 'PATCH',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify(updates)
+        })
+        if (!response.ok) {
+            console.log(response.error)
+            return
+
+        }
+        const data = await response.json()
+        setUser(data)
+        localStorage.setItem('user', JSON.stringify(data))
     }
     function keyPress(letter) {
         if (disableInput) {
@@ -214,7 +368,8 @@ function App() {
                     return
                 }
                 else if (word === currentWord) {
-                    localStorage.setItem('guess', JSON.stringify(guesses))
+                    const nextRow = currentRow + 1
+                    saveGameState({ winRow: currentRow, currentRow: nextRow })
                     if (currentRow === 0) {
                         setMessagetoShow("Genius")
                     }
@@ -236,13 +391,14 @@ function App() {
                     setTimeout(() => {
                         determineKeyboardColor(word)
                         setwinRow(currentRow)
-                        localStorage.setItem('winrow', currentRow)
+                        saveGameState({ winRow: currentRow, currentRow: nextRow })
                     },1800)
                     setdisableInput(true)
                     setJustWon(true)
                     setTimeout(() => {
                         isGameOver(true)
-                        localStorage.setItem('gameover', JSON.stringify(true))
+                        saveGameState({ winRow: currentRow, currentRow: nextRow, gameOver: true })
+                        recordGameResult(true, currentRow + 1)
                     },3600)
                     setTimeout(()=> {
                         setShowGamePopup(true)
@@ -310,43 +466,37 @@ function App() {
                         }
                     }
                     if (!hardModeFail) {
-                        localStorage.setItem('guess', JSON.stringify(guesses))
-                    setTimeout(() => {
-                        setdisableInput(false)
-                        determineKeyboardColor(word)
-
-                        if (currentRow + 1 === 6) {
-                            setTimeout(()=> {
-                                isGameOver(true)
-                                setShowGamePopup(true)
-                                setMessagetoShow(currentWord.toUpperCase())
-                                localStorage.setItem('gameover', JSON.stringify(true))
-
+                        setTimeout(() => {
+                            setdisableInput(false)
+                            determineKeyboardColor(word)
+                            if (currentRow + 1 === 6) {
+                                setTimeout(()=> {
+                                    isGameOver(true)
+                                    setShowGamePopup(true)
+                                    setMessagetoShow(currentWord.toUpperCase())
+                                    saveGameState({ gameOver: true, winRow: null, currentRow: currentRow + 1 })
+                                    recordGameResult(false, 6)
                             }, 700)
                         }
                     },1800)
                     setdisableInput(true)
-
+    
                     }
                     
                 }
                 if (!hardModeFail) {
-                    localStorage.setItem('currentrow', currentRow+1)
-                    setCurrentRow(currentRow + 1)
+                    saveGameState({ guesses: guesses, currentRow: currentRow+1 }) 
+                    setCurrentRow( currentRow+1)
                     setCurrentCol(0)
-                    sethardmodereq(false)
-
                 }
-
-                
-                
+    
             }
             if (letter !== 'DELETE') {
                 return;
             }
         }
             
-
+    
         if (letter === 'ENTER' && currentCol !== 5) {
             setMessagetoShow("Not enough letters")
             setShowGamePopup(true)
@@ -369,7 +519,7 @@ function App() {
             setGuesses(newArray)
             return;
         }
-
+    
         newArray[currentRow][currentCol] = letter
         setGuesses(newArray)
         setCurrentCol(currentCol + 1)
@@ -413,9 +563,9 @@ function App() {
                                     return
                                 }
                             }
+
                             setHardMode(!hardmode)
-                            localStorage.setItem('hardmode', JSON.stringify(!hardmode))
-                            setHardModeInteracted(true)
+                            saveSetting('hardmode', !hardmode, 'hardMode')
                         }} className={hardmode ? "greenbutton" : "graybutton"}>
                             <div className='circle'></div>
                         </button>
@@ -427,8 +577,7 @@ function App() {
                         </div>
                         <button onClick={() => {
                             setkeyboardonly(!keyboardonly)
-                            localStorage.setItem('keyboardonly', JSON.stringify(!keyboardonly))
-                            setKeyboardOnlyInteracted(true)
+                            saveSetting('keyboardonly', !keyboardonly, 'keyboardOnly')
                         }} className={keyboardonly ? "greenbutton" : "graybutton"}>
                              <div className ='circle'></div>
                         </button>            
@@ -617,20 +766,30 @@ function App() {
             <div style={{paddingLeft:"20px"}}>Privacy Settings</div>
             <div className="privacy" >
                     <button>Privacy Policy</button>
-
                     <button>Cookie Policy</button>
-
                     <button>Privacy FAQ</button>
-
-                    <button>Delete My Account</button>
-
+                    <button onClick={()=> {
+                        if (!user) {
+                            navigate('/login')
+                        }
+                        navigate('/deleteAccount', {state: {email: user.email}})
+                    }}>Delete My Account</button>
                     <button>Your Privacy Choices</button>
             </div>
 
         </div>
         <div className="logoutsection">
             <button className="bottomhome" onClick={()=> navigate('/')}>HOME</button>
-            <button className="bottomloginbutton" onClick={() =>navigate('/login')}>LOG IN</button>
+            <button className="bottomloginbutton" onClick={() => {
+                if (user) {
+                    setUser(null)
+                    localStorage.removeItem('user')
+                    navigate('/')
+                } else {
+                 navigate('/login')
+                }
+            }}> 
+            {user ? 'LOG OUT' : 'LOG IN' } </button>
 
         </div>
        </div>

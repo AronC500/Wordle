@@ -28,9 +28,10 @@ function ForgotPassword() {
             setVerificationExpire(data.expiresAt)
         }
     }
+    navigate('/login')
+
     useEffect(() => {
         if (!email) {
-            navigate('/login')
             return
         }
         sendVerificationCode()

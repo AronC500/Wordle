@@ -1,129 +1,147 @@
 .loginbackground {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    background-color:white;
-    height:100vh;
-    margin-top:100px;
-
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    min-height: 100vh;
+    margin-top: clamp(48px, 12vh, 100px);
+    padding: 0 16px;
+    box-sizing: border-box;
+    width: 100%;
 }
+
 .emailtext {
-    font-size:14px;
-    font-weight:600;
-    font-family:'Inter';
-
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter';
 }
+
 .LoginText {
-    font-weight:400;
-    font-size:27px;
+    font-weight: 400;
+    font-size: clamp(20px, 6vw, 27px);
     font-family: 'Playfair Display';
-    padding-bottom:10px;
+    padding-bottom: 10px;
+    text-align: center;
 }
 
 .email {
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-    margin-top:16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 16px;
+    width: 100%;
 }
+
 input {
-    height:2.75rem;
-    font-weight:500;
-    font-size:1rem;
-    padding:0px 0.75rem;
+    height: 2.75rem;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0px 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
 }
-.inputInvalid{
-    border:1px solid rgba(187, 4, 4, 0.9);
-    border-radius:3px;
+
+.inputInvalid {
+    border: 1px solid rgba(187, 4, 4, 0.9);
+    border-radius: 3px;
 }
+
 .inputNormal {
-    border:1px solid black;
-    border-radius:3px;
-    
+    border: 1px solid black;
+    border-radius: 3px;
 }
+
 .error {
-    color:rgba(187, 4, 4, 0.9);
+    color: rgba(187, 4, 4, 0.9);
     font-size: 14px;
-    font-weight:500;
-    font-family:'Inter';
-    display:flex;
-    align-items:center;
-    gap:8px;
-
+    font-weight: 500;
+    font-family: 'Inter';
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
 .error img {
-    margin-left:3px;
-}
-.forms {
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-    max-width:450px;
+    margin-left: 3px;
 }
 
-a{
-    text-decoration:underline;
-    cursor:pointer;
+.forms {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 450px;
 }
+
+a {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .alternateOptions {
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .termstext {
     text-align: center;
-    font-size:14px;
-    font-family:'Inter';
-
+    font-size: 13px;
+    font-family: 'Inter';
 }
+
 hr {
     border: none;
     border-top: 1px solid #ccc;
     width: 50%;
 }
-.horizontalline{
-    display:flex; 
-    gap:7px;
-    font-size:14px;
-    font-weight:500;
-    font-family:'Inter';
+
+.horizontalline {
+    display: flex;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter';
+    align-items: center;
 }
-.continuebutton{
-    height:44px;
-    font-size:1em;
-    font-family:'Inter';
-    font-weight:700;
-    cursor:pointer;
-    border-radius:3px;
-    background-color:rgb(18, 18, 18);
-    color:white;
-    border:0.0625em solid rgb(18, 18, 18);
+
+.continuebutton {
+    height: 44px;
+    font-size: 1em;
+    font-family: 'Inter';
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: rgb(18, 18, 18);
+    color: white;
+    border: 0.0625em solid rgb(18, 18, 18);
+    width: 100%;
 }
 
 .google, .apple {
-    height:44px;
-    padding:1px;
-    cursor:pointer;
-    font-size:1em;
-    background-color:white;
-    border:1px solid black;
-    border-radius:3px;
-    font-family:'Inter';
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
+    height: 44px;
+    padding: 1px;
+    cursor: pointer;
+    font-size: 1em;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    font-family: 'Inter';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
+
 .google {
-    gap:10px;
+    gap: 10px;
+}
 
-}
 .apple {
-    gap:15px;
+    gap: 15px;
 }
-p{
+
+p {
     line-height: 1;
 }
-

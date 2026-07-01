@@ -9,10 +9,10 @@ function DeleteAccount() {
     const [text, setText] = useState('')
     const [confirm, setConfirm] = useState(false)
     const [deleted, setDeleted] = useState(false)
+    navigate('/login')
 
     useEffect(()=> {
         if (!email) {
-            navigate('/login')
         }
     }, [])
     function textChange(e) {

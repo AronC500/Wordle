@@ -10,6 +10,8 @@ import ForgotPassword from "./forgotpassword.jsx"
 import CreateFree from "./CreateFreeAccount.jsx"
 import SetNewPassword from "./SetNewPassword.jsx"
 import UpdatedPass from "./UpdatedPass.jsx"
+import DeleteAccount from "./deleteAccount.jsx"
+
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLECLIENTID}>
     <BrowserRouter>
@@ -22,7 +24,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/login/createFree" element={<CreateFree/>}/>
         <Route path="/login/password/SetNewPassword" element={<SetNewPassword/>}/>
         <Route path="/login/password/SetNewPassword/UpdatedPass" element={<UpdatedPass/>}/>
-
+        <Route path="/deleteAccount" element={<DeleteAccount/>}/>
       </Routes>
     </BrowserRouter>
   </GoogleOAuthProvider>

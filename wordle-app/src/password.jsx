@@ -3,6 +3,8 @@ import {useNavigate, useLocation} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 
 function Password() {
+//test password.jsx page, setnew password page, updatedpassword page,  forgotpassword page , test tomorrow verification code and see if it expire.
+//resend domain thing(make sure write in google doc)
     const location = useLocation()
     const email =  location.state?.email || ''
     const [passText, setPassText] = useState('Show')
@@ -10,9 +12,10 @@ function Password() {
     const [password, setPassword] = useState('')
     const [isInvalid, setisInvalid] = useState(false)
     const navigate = useNavigate()
+    navigate('/login')
+
     useEffect(() => {
         if (!email) {
-            navigate('/login')
         }
     }, [])
 

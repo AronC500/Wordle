@@ -10,10 +10,10 @@ function NewPassword() {
     const [show, setShow] = useState(false)
     const [errorMessage, setErrorMessage]  = useState('')
     const [isInvalid, setisInvalid] = useState(false)
+    navigate('/login')
 
     useEffect(() => {
         if (!email) {
-            navigate('/login')
 
         }
     }, [])

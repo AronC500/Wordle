@@ -2,36 +2,81 @@ import "./Login.css"
 import {useState} from 'react'
 import { useNavigate, useLocation} from 'react-router-dom'
 import { useGoogleLogin } from '@react-oauth/google'
-//need creaete show and edit button, when going back to login, email is back there still for 
-//when you click edit or not click edit by just clicking arrow back button. also that they cant click forget password
-//when tehy have no email when we do database part just check eveyrthing when we start database ig.
+
 function Login() {
-    const location = useLocation()
-    const exampleUserEmailInDatabase = 'aronc220@gmail.com'
-    const userEmail = location.state?.email
     const navigate = useNavigate()
-    const googleLogin = useGoogleLogin({
-        onSuccess: (response) => {
-            navigate('/game')
+    const location = useLocation()
+    const [message, setShowMessage] = useState('')
+    const email = location.state?.email || ''
+    const googleLogin =  useGoogleLogin({
+        onSuccess: async (response) => {
+            const user = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: {
+                    Authorization: `Bearer ${response.access_token}`
+                },
+            })
+            const data = await user.json()
+            const databaseresponse = await fetch("http://localhost:3000/login", {
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    password: '',
+                    google: true
+                })
+            })
+            const userData = await databaseresponse.json()
+            if (databaseresponse.ok) {
+                localStorage.setItem('user', JSON.stringify(userData))
+                navigate('/game')
+            }
+            else {
+                console.log(userData.error)
+            }
         },
         onError: () => {
+            console.log("Google Login failed")
         }
-    })
-    const [input, setInput] = useState(!userEmail ? '' : userEmail)
+    })  
+    const [input, setInput] = useState(email)
     const [isInvalid, setIsInvalid] = useState(false)
-    function submitEmail() {
-        if (!input.includes('@gmail.com')) {
-            setIsInvalid(true);
-            return;
+    async function submitEmail() {
+        if (!input.includes('@gmail.com') || input.split('@')[0].length === 0) {   
+            setShowMessage('Please enter a valid email address.')         
+            setIsInvalid(true)
+            return
         }
-        setIsInvalid(false)
-        if (exampleUserEmailInDatabase === input) {
-            navigate('/login/password', {state: {email: input}})
+        else {        
+            setIsInvalid(false)
         }
-        else {
-            navigate('/login/createFree', {state: {email: input}})
+        const response = await fetch(`http://localhost:3000/login/${encodeURIComponent(input)}`, {
+            method: 'GET'
+        })
+
+        if (response.status === 404) {
+            navigate('/login/createFree', {state: {email:input}})
+            return
         }
+
+        const data = await response.json()
+        if (response.ok) {
+            if (data?.google) {
+                setIsInvalid(true)
+                setShowMessage('This email previously logged in using Google.')
+                return;
+            }
+            
+            
+            navigate('/login/password', {state: {email:input}})
+            
+
+        }
+
+
     }
+
     function onChangeInput(e) {
         setInput(e.target.value) 
         setIsInvalid(false)
@@ -48,9 +93,10 @@ function Login() {
                     {isInvalid &&
                         <div className="error">
                             <img src='/error.png' style={{width:"13px",height:"13px"}}/>
-                            <div>Please enter a valid email address.</div>
+                            <div>{message}</div>
                         </div>
                     }
+
                     
                 </div>
                 <button onClick = {submitEmail} className="continuebutton">Continue</button>

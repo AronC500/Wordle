@@ -4,25 +4,39 @@ import {useState, useEffect} from 'react'
 function CreateFree() {
     const navigate = useNavigate()
     const location = useLocation()
-    const email = location.state?.email
+    const email = location.state?.email 
     const [passText, setPassText] = useState('Show')
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
     const [isInvalidPass, setisInvalidPass] = useState(false)
+    navigate('/login')
 
     useEffect(() => {
         if (!email) {
-            navigate('/login')
         }
     }, [])
 
-    function checkPassword() {
+    async function checkPassword() {
         if (password.length < 6) {
             setisInvalidPass(true)
             return
         }
+        const response = await fetch('http://localhost:3000/login', {
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email, password})
+        })
+        const data = await response.json()
+        if (response.ok) {
+            localStorage.setItem('user', JSON.stringify(data))
+        }
+        else {
+            console.log(response.error)
+            return
+        }
         navigate('/game')
-
     }
     function showText() {
         setShow(!show)
@@ -32,6 +46,10 @@ function CreateFree() {
         else {
             setPassText('Show')
         }
+
+    }
+    function editEmail() {
+        navigate('/login', {state: {email}})
 
     }
 
@@ -48,7 +66,7 @@ function CreateFree() {
                 <div className="email" style={{margin:"0px", padding:"0px"}}>
                     <div>Email address</div>
                     <input value={email} disabled type="email" />
-                    <button  className="pEmailEdit">Edit</button>
+                    <button  onClick={editEmail} className="pEmailEdit">Edit</button>
                 </div>
                 <div className="password">
 

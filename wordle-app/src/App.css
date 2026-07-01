@@ -4,8 +4,8 @@
     gap:5px;
     position:relative;
     align-items:center;
-
-    
+    width:100%;
+    max-width:400px;
 }
 
 .parent {
@@ -14,9 +14,11 @@
     align-items:center;
     gap:10px;
     background-color:#121213;   
-    height:100vh;
-
-
+    min-height:100vh;
+    width:100%;
+    padding:0 10px;
+    box-sizing:border-box;
+    overflow-x:hidden;
 }
 
 .word, .wordanimation {
@@ -25,63 +27,36 @@
 }
 
 @keyframes shake {
-    0% {
-        transform:translateX(5px)
-        
-    }
-    12% {
-        transform:translateX(-5px)
-    }
-    25% {
-        transform: translateX(5px)
-    }
-    37.5% {
-        transform: translateX(-5px)
-    }
-    50% {
-        transform: translateX(5px)
-    }
-    62.5% {
-        transform: translateX(-5px)
-    }
-    75% {
-        transform: translateX(5px)
-    }
-    87.5% {
-        transform: translateX(-5px)
-    }
-    100% {
-        transform: translateX(5px)
-    }
+    0% { transform:translateX(5px) }
+    12% { transform:translateX(-5px) }
+    25% { transform: translateX(5px) }
+    37.5% { transform: translateX(-5px) }
+    50% { transform: translateX(5px) }
+    62.5% { transform: translateX(-5px) }
+    75% { transform: translateX(5px) }
+    87.5% { transform: translateX(-5px) }
+    100% { transform: translateX(5px) }
 }
 
 .wordanimation {
     animation: shake 0.5s linear;
 }
 @keyframes pop {
-    0% { 
-        transform: scale(1); 
-    }
-    50% { 
-        transform: scale(1.1); 
-    }
-    100% { 
-        transform: scale(1); 
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
-
-  
 .letter, .letterwithborder, .green, .gray, .yellow, .jump {
     font-family: 'Roboto';
-    height: 48.4px;
-    width: 48.4px;
+    height: clamp(38px, 12vw, 48.4px);
+    width: clamp(38px, 12vw, 48.4px);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 30px;
+    font-size: clamp(20px, 6vw, 30px);
 }
 
 .letter {
@@ -91,119 +66,40 @@
 .letterwithborder {
     border: 2px solid #565758;
     animation: pop 0.1s linear !important;
-
 }
 
 @keyframes letterrotategreen {
-    0% {
-        transform: rotateX(0deg);
-        border: 2px solid #565758;
-        background-color:#121213;   
-
-    }
-    50% {
-        transform: rotateX(90deg);
-        border: 2px solid #565758;
-        background-color:#121213;   
-
-    }
-    51% {
-        background-color: #538d4e; 
-        border: 2px solid #538d4e;
-
-    }
-    100% {
-        transform: rotateX(0deg);
-        background-color: #538d4e; 
-        border: 2px solid #538d4e;
-
-    }
+    0% { transform: rotateX(0deg); border: 2px solid #565758; background-color:#121213; }
+    50% { transform: rotateX(90deg); border: 2px solid #565758; background-color:#121213; }
+    51% { background-color: #538d4e; border: 2px solid #538d4e; }
+    100% { transform: rotateX(0deg); background-color: #538d4e; border: 2px solid #538d4e; }
 }
 
 @keyframes jumpupanddown {
-    0% {
-        transform: translateY(0px);
-    }
-    40% {
-        transform: translateY(-25px);
-    }
-    70% {
-        transform: translateY(4px);
-    }
-    85% {
-        transform: translateY(-8px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
+    0% { transform: translateY(0px); }
+    40% { transform: translateY(-25px); }
+    70% { transform: translateY(4px); }
+    85% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
 }
 
-
-
 @keyframes letterrotategray {
-    0% {
-        transform: rotateX(0deg);
-        border: 2px solid #565758;
-        background-color:#121213;   
-
-        
-    }
-    50% {
-        transform: rotateX(90deg);
-        border: 2px solid #565758;
-        background-color:#121213;   
-
-    }
-    51% {
-        background-color: #3a3a3c;
-        border: 2px solid #3a3a3c;
-
-
-    }
-    100% {
-        transform: rotateX(0deg);
-        background-color: #3a3a3c;
-        border: 2px solid #3a3a3c;
-    }
+    0% { transform: rotateX(0deg); border: 2px solid #565758; background-color:#121213; }
+    50% { transform: rotateX(90deg); border: 2px solid #565758; background-color:#121213; }
+    51% { background-color: #3a3a3c; border: 2px solid #3a3a3c; }
+    100% { transform: rotateX(0deg); background-color: #3a3a3c; border: 2px solid #3a3a3c; }
 }
 
 @keyframes letterrotateyellow {
-    0% {
-        transform: rotateX(0deg);
-        border: 2px solid #565758;
-        background-color:#121213;   
-
-
-    }
-    50% {
-        transform: rotateX(90deg);
-        border: 2px solid #565758;
-        background-color:#121213;   
-
-
-    }
-    51% {
-        background-color: #b59f3b;
-        border: 2px solid #b59f3b;
-
-    }
-    100% {
-        transform: rotateX(0deg);
-        background-color: #b59f3b;
-        border: 2px solid #b59f3b;
-    }
+    0% { transform: rotateX(0deg); border: 2px solid #565758; background-color:#121213; }
+    50% { transform: rotateX(90deg); border: 2px solid #565758; background-color:#121213; }
+    51% { background-color: #b59f3b; border: 2px solid #b59f3b; }
+    100% { transform: rotateX(0deg); background-color: #b59f3b; border: 2px solid #b59f3b; }
 }
-
-
 
 .green, .jump{
     animation: letterrotategreen 0.5s linear;
-    /*
-        apply both forwards(applies 100% keyframe value after animation end otherwise it would go back to original and backwards(applies 0% keyframe value during animation delay)
-    */
     animation-fill-mode: both;
-
-
 }
 
 .jump {
@@ -215,81 +111,72 @@
 .gray {
     animation: letterrotategray 0.5s linear;
     animation-fill-mode: both;
-
-
-
 }
 
 .yellow {
     animation: letterrotateyellow 0.5s linear;
     animation-fill-mode: both;
-
-
-
 }
-
 
 .keyboard {
     display:flex;
     flex-direction:column;
     gap:8px;
+    width:100%;
+    max-width:500px;
+    padding:0 6px;
+    box-sizing:border-box;
 }
 .keyboardrow {
     display: flex;
     justify-content:center;
-    gap: 6px;
+    gap: clamp(3px, 1.2vw, 6px);
+    width:100%;
 }
 .keyboardletter, .keyboardgreen, .keyboardyellow, .keyboardgray{
-    height:58px;
-    width:43px;
+    height: clamp(42px, 12vw, 58px);
+    flex: 1 1 0;
+    max-width:43px;
+    min-width:20px;
     border: none;
     border-radius:4px;
     cursor:pointer;
-    font-size:19px;
+    font-size: clamp(11px, 3vw, 19px);
     background-color: #818384;
     color:white;
     font-weight: bold;
-
+    padding:0;
 }
 
 .keyboardgreen {
     background-color: #538d4e; 
     border: 2px solid #538d4e;
-
 }
 
 .keyboardyellow {
     background-color: #b59f3b;
     border: 2px solid #b59f3b;
-
 }
 
 .keyboardgray {
     background-color: #3a3a3c;
     border: 2px solid #3a3a3c;
-
 }
-
 
 .ENTER, .DELETE {
     color:white;
-    height:58px;
-    width:67px;
+    height: clamp(42px, 12vw, 58px);
+    flex: 1.6 1 0;
+    max-width:67px;
+    min-width:30px;
     border: none;
     border-radius:4px;
     cursor:pointer;
-    font-size:11.5px;
+    font-size: clamp(9px, 2.2vw, 11.5px);
     background-color: #818384;
     font-weight: bold;
-
-
+    padding:0 2px;
 }
-
-
-
-
-
-
 
 .hamburgerbutton{
     all: unset;
@@ -298,22 +185,27 @@
 }
 
 .header{
-    width:100%;
+    width:100vw;
     height: 55px;
     border-bottom:1px solid #424242;
     display:flex;
     justify-content:space-between;
-
+    align-items:stretch;
+    box-sizing:border-box;
+    overflow:hidden;
 }
 .rightside {
     margin-right:5px;
+    display:flex;
+    height:100%;
 }
 .rightside button {
     background-color:#121213;
     border:none;
-    height:55px;
+    height:100%;
     width:55px;
-    cursor:pointer
+    cursor:pointer;
+    box-sizing:border-box;
 }
 
 .rightside button:hover {
@@ -326,22 +218,20 @@
 
 .hamburgerdiv {
     width:55px;
-    height:55px;
+    height:100%;
     display:flex;
     justify-content:center;
+    align-items:center;
     margin-left:5px;
-
-
-
+    flex-shrink:0;
+    box-sizing:border-box;
 }
 .hamburgerdiv:hover {
     background-color:#2f2f31;
 }
 
-
-
 .overlay, .overlayHidden {
-    width:375px;
+    width: 375px;
     background-color: #121213;
     display: flex;
     flex-direction: column;
@@ -349,16 +239,23 @@
     position: fixed;
     left: 0;
     transition: transform 0.2s ease;
+    box-sizing:border-box;
+    overflow-y:auto;
 }
   
 .overlay {
-    /* pixels away from anchor so here 0 pixel away from left:0" */
     transform: translateX(0px);    
     z-index:1;  
 }
   
 .overlayHidden {
-    transform: translateX(-375px);  
+    transform: translateX(-100%);  
+}
+
+@media (max-width: 375px) {
+    .overlay, .overlayHidden {
+        width: 100vw;
+    }
 }
 
 .overlayheader{
@@ -373,10 +270,6 @@
     cursor:pointer;
 }
 
-
-
-
-
 .popupmessage {
     position:absolute;
     background-color:white;
@@ -386,17 +279,21 @@
     font-size:13px;
     padding:13px 12px;
     top:-5px;
-    z-index:1;
-    
-
+    z-index:3;
+    text-align:center;
+    max-width:90vw;
+    text-wrap:wrap;
+    box-sizing:border-box;
 }
 
 .gameoverbuttons {
     display:flex;
     flex-direction:column;
     gap:12px;
-    width:252px;
+    width:100%;
+    max-width:252px;
     margin-top:40px;
+    box-sizing:border-box;
 }
 
 .resultbutton, .homebutton {
@@ -409,10 +306,7 @@
     font-weight:500;
     font-size:14px;
     font-family:'Inter';
-
 }
-
-
 
 .privacysection {
     color:white;
@@ -424,8 +318,7 @@
     width:100%;
     position:relative;
     padding-top:25px;
-
-
+    box-sizing:border-box;
 }
 
 .privacy button {
@@ -437,31 +330,29 @@
     box-sizing:border-box;
 }
 
-
 .privacy {
     display:flex;
     flex-direction:column;
     font-size:14px;
     font-weight:300;
     margin-top:10px;
-
 }
-
 
 .privacy button:hover {
     background-color:#2f2f31;
-
 }
 .logoutsection {
     margin-top:10px;
-    padding:20px;
+    padding:20px 10px;
     border-top:1px white solid;
     position:absolute;
     bottom:0;
     display:flex;
     gap:10px;
     background-color:black;
-    width:fit-content;
+    width:100%;
+    box-sizing:border-box;
+    flex-wrap:wrap;
 }
 .bottomloginbutton, .bottomhome {
     background-color:white;
@@ -472,7 +363,9 @@
     height:36px;
     border:1px solid white;
     border-radius:3px;
-    width:162.5px;
+    flex:1;
+    max-width:162.5px;
+    min-width:100px;
     cursor:pointer;
 }
 
@@ -491,24 +384,23 @@
     justify-content:center;
     align-items:center;
     z-index:2;
+    padding:16px;
+    box-sizing:border-box;
 }
-.settingspopup, .statisticpopup, .howplaypopup {
-    background-color:white;
-    left:50%;
-    top:50%;
+
+
+.statisticpopup, .settingspopup, .howplaypopup{
+    background-color:#121213;
     border-radius:8px;
     border:1px solid #121213;
-    background-color:#121213;
-    width:505px;
+    width: min(505px, 92vw);
     padding:20px 17px;
+    padding-left:clamp(16px, 6vw, 30px);
     display:flex;
     flex-direction:column;
     color:white;
-
-
-
+    box-sizing:border-box;
 }
-
 .settingstext {
     font-weight:700;
     font-family:'Inter';
@@ -519,7 +411,6 @@
     align-items:center;
     position:relative;
     justify-content:center;
-
 }
 
 .settingbody {
@@ -529,16 +420,15 @@
 }
 
 .settingbigtext {
-    font-size:17px;
+    font-size:clamp(15px, 4vw, 17px);
     font-family:'Inter';
-
 }
 
 .settingsmalltext {
     font-family:'Inter';
     font-size:11.5px;
     color:#dfdfdf;
-
+    overflow-wrap:break-word;
 }
 
 .individual {
@@ -547,16 +437,24 @@
     padding:15px 0px;
     border-bottom:1px solid #3a3a3c;
     align-items:center;
+    gap:12px;
+}
 
+.individual > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+@media (max-width: 480px) {
+    .settingsmalltext {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
 
 @keyframes togglemove {
-    0% {
-        transform:translateX(0px)
-    }
-    100% {
-        transform:translateX(14px)
-    }
+    0% { transform:translateX(0px) }
+    100% { transform:translateX(14px) }
 }
 .graybutton, .greenbutton {
     background-color: #565758;
@@ -568,6 +466,7 @@
     align-items: center;
     position: relative;
     cursor: pointer;
+    flex-shrink:0;
 }
 
 .greenbutton {
@@ -586,7 +485,7 @@
 }
 
 .greenbutton .circle {
-    transform: translateX(13px);
+    transform: translateX(14px);
 }
 
 .statisticclosebutton, .Showhowplayclosebutton {
@@ -596,13 +495,19 @@
 }
 
 .statisticpopup {
-    padding-left:30px;
+    padding-left:clamp(16px, 6vw, 30px);
 }
 .statisticbody {
     display:flex;
     flex-direction:column;
     align-items:center;
     text-align:center;
+}
+
+.statisticbody img {
+    height: clamp(120px, 24vh, 300px);
+    width: auto;
+    max-width: 80%;
 }
 
 .statistictext {
@@ -612,21 +517,21 @@
 }
 
 .statistictrack {
-    margin-bottom:20px;
+    margin-bottom:clamp(10px, 3vh, 20px);
     font-weight:700; 
     font-family: 'Saira Condensed';
-    font-size:30px;
-    width:260px;
+    font-size:clamp(22px, 6vw, 30px);
+    width:100%;
+    max-width:260px;
 }
-
 
 .statisticaccess {
     font-weight:300;
-    font-size:18px;
+    font-size:clamp(15px, 4vw, 18px);
     font-family:'Inter';
-    width:360px;
+    width:100%;
+    max-width:360px;
 }
-
 
 .createfreebutton {
     font-size:16px;
@@ -640,14 +545,23 @@
     height:3em;
     letter-spacing:.01em;
     cursor:pointer;
-    margin-bottom:50px;
-    margin-top:30px;
-
-
-
+    margin-bottom:clamp(20px, 5vh, 50px);
+    margin-top:clamp(15px, 4vh, 30px);
+    max-width:100%;
 }
 
-
+@media (max-height: 700px) {
+    .statisticbody img {
+        height: clamp(100px, 18vh, 180px);
+    }
+    .createfreebutton {
+        margin-top: 12px;
+        margin-bottom: 16px;
+    }
+    .statistictrack {
+        margin-bottom: 8px;
+    }
+}
 
 .footer {
     position:fixed;
@@ -658,51 +572,47 @@
     align-items:center;
     flex-wrap:wrap;
     justify-content:center;
-
+    max-width:100vw;
+    padding:0 8px;
+    box-sizing:border-box;
 }
 
 .footer a {
     text-decoration:none;
     font-size:11px;
-
 }
 
 .footer div {
     font-size:20px;
 }
 
-
 .howplaypopup  {
     gap:20px;
-    padding-left:40px;
-    padding-bottom:60px;
+    padding-left:clamp(16px, 6vw, 40px);
+    padding-bottom:clamp(30px, 8vw, 60px);
 }
 
 .howplay {
     font-weight:700;
     font-size:25px;
     font-family: 'Saira Condensed';
-
 }
-
 
 .guess6 {
     font-weight:500;
     font-size:20px;
     font-family: 'Saira Condensed';
-
 }
 ul {
     margin:0;
     font-family: 'Saira Condensed';
     font-size:17px;
-    width:400px;
-
-
+    width:100%;
+    max-width:400px;
+    box-sizing:border-box;
 }
 
 .rogue, .examples, .light {
-
     display:flex;
     flex-direction:column;
     gap:8px;
@@ -711,20 +621,16 @@ ul {
 .examples span {
     font-size:16px;
     font-weight:bold;
-
-
 }
 
 .rogue p, .examples p, .light p {
     font-size:15px;
     font-family:'Inter';
-
 }
 
 .wordy {
     display:flex;
     gap:5px;
-
 }
 
 .wordy div {
@@ -738,7 +644,7 @@ ul {
     font-size:25px;
     font-family:'Inter';
     font-weight: bold;
-
+    flex-shrink:0;
 }
 
 .wordy .W {
@@ -756,13 +662,13 @@ ul {
     border: 2px solid #3a3a3c;
 }
 
-
 .howplayfooter {
     font-family:'Inter';
     font-size:13px;
+    text-decoration:underline;
     display:flex;
     justify-content:space-between;
-    text-decoration:underline;
+    padding-right:8px;
 }
 
 .howplayfooter button {
