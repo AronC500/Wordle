@@ -1,0 +1,98 @@
+.delete {
+    color:rgb(18, 18, 18);
+    font-family:'Inter';
+    font-weight:600;
+    font-size:28px;
+}
+
+.fullcontainer {
+    display:flex;
+    justify-content:center;
+    margin-top:70px;
+
+}
+.innercontainer {
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    max-width:620px;  
+
+}
+.permanent {
+    font-weight:400;
+    color:rgb(18, 18, 18);
+    font-family:'Inter';
+    font-size:15px;
+}
+
+.checkboxSection {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.checkboxSection input {
+    cursor:pointer;
+    height:16px;
+    width:16px;
+    padding:0;
+    margin:0;
+}
+
+.deleteSection {
+    display:flex;
+    gap:35px;
+    align-items:center;
+
+}
+.normalButton {
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: rgb(18, 18, 18);
+    padding: 13px 17px;
+    border-radius: 3px;
+    border:none;
+    cursor:pointer;
+}
+.disableButton {
+    font-size: 15px;
+    font-weight: bold;
+    background-color: rgb(125, 125, 125);
+    border:none;
+    padding: 13px 17px;
+    color:white;
+    border-radius: 3px;
+    cursor: not-allowed;
+}
+
+.deleteSection a:hover {
+    text-decoration:none;
+}
+.textareaSection {
+    display:flex;
+    flex-direction:column;
+
+}
+
+.textareaSection textarea {
+    resize: vertical;
+    padding:10px;
+
+}
+
+.characters {
+    text-align:right;
+    color:rgb(102,102,102);
+    font-size:12px;
+    font-family:'Inter';
+    font-weight:500;
+}
+.deleteContainer {
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+    width:500px;
+    padding-top:40px;
+}

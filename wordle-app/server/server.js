@@ -43,6 +43,7 @@ async function comparePassword(password, storedPass) {
 app.post('/login', (req,res) => {
     const { email, password, google } =  req.body
     const hash = hashPassword(password)
+    let userData
 
     db.query(`SELECT * FROM users WHERE email=?`, [email], (err,result)=> {
         if (err) {
@@ -58,7 +59,7 @@ app.post('/login', (req,res) => {
             });
             return
         }
-        const userData = result[0]
+        userData = result[0]
         const match = comparePassword(password, userData.password)
         if (!match) {
             return res.status(401).json({ error: "Wrong password" })
@@ -67,7 +68,15 @@ app.post('/login', (req,res) => {
 
     })
 })
-
+app.delete('/deleteAccount', (req,res)=> {
+    const {email} = req.body
+    db.query(`DELETE FROM users WHERE email = ?`, [email], (err,result)=> {
+        if (err) {
+            return res.status(500).json({error: "Server error"})
+        }
+        return res.status(200).json({success: true})
+    })
+})
 app.get('/login/:email', (req,res)=> {
     const email = req.params.email
     db.query(`SELECT * FROM users WHERE email = ?`, [email], (err,result)=> {
