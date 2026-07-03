@@ -525,6 +525,16 @@ function App() {
         setCurrentCol(currentCol + 1)
         return;
     }
+    function getGuessDistribution(user) {
+        const counts = [1, 2, 3, 4, 5, 6].map(num => user[`WonIN${num}`] || 0)
+        const maxCount = Math.max(...counts, 1)
+    
+        return counts.map((count, index) => ({num: index + 1, count, percent: (count / maxCount) * 100}))
+    }
+    if (user) {
+        const guessDistribution = getGuessDistribution(user)
+    }
+
     return (
     <div className="parent">
         {showSettings &&
@@ -672,6 +682,8 @@ function App() {
                     Statistics
                 </div>
                 <div className="statisticbody">
+                    {!user ?
+                    <>
                     <img style={{height:"300px", width:"220px"}}src="/statistic.png"/>
                     <div className="statistictrack">
                         Track your stats and view badges.
@@ -682,6 +694,44 @@ function App() {
                     <button onClick={()=> navigate('/login')}className="createfreebutton">
                         Create a free account
                     </button>
+                    </>
+                    :
+                    <>
+                    <div className="topstats">
+                        <div className="statitem">
+                            <div className="bignumb">{user.gamesPlayed || 0}</div>
+                            <div className="statlabel">Played</div>
+                        </div>
+                        <div className="statitem">
+                            <div className="bignumb">
+                                {user.gamesPlayed ? Math.round((user.gamesWon / user.gamesPlayed) * 100) : 0}
+                            </div>
+                            <div className="statlabel">Win %</div>
+                        </div>
+                        <div className="statitem">
+                            <div className="bignumb">{user.currentStreak || 0}</div>
+                            <div className="statlabel">Current Streak</div>
+                        </div>
+                         <div className="statitem">
+                            <div className="bignumb">{user.maxStreak || 0}</div>
+                            <div className="statlabel">Max Streak</div>
+                        </div>
+                    </div>
+                    <div className="guesscontainer">
+                        <div className="guesstitle">GUESS DISTRIBUTION</div>
+                        {guessDistribution.map((item) => (
+                            <div className="individualguess" key={item.num}>
+                                <div className="guessnum">{item.num}</div>
+                                <div className="guessbartrack">
+                                    <div className={item.count > 0 ? "guessbarfilled" : "guessbarempty"} style={{ width: item.count > 0 ? `${Math.max(item.percent, 8)}%` : '28px' }} >
+                                        <span className="guesscount">{item.count}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                        </>
+                    }   
                 </div>
             </div>
         </div>
