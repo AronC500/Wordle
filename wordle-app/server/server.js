@@ -8,7 +8,6 @@ dotenv.config()
 const {Resend} = require ('resend')
 const resend = new Resend(process.env.RESEND)
 
-
 const app = express()
 
 const db = mysql.createConnection({
@@ -31,40 +30,49 @@ app.use(cors())
 app.use(express.json())
 
 
-async function hashPassword(password) {
-    const hash = await bcrypt.hash(password, 10)
-    return hash
-
-}
-async function comparePassword(password, storedPass) {
-    const result = await bcrypt.compare(password, storedPass)
-    return result
-}
 app.post('/login', (req,res) => {
-    const { email, password, google } =  req.body
-    const hash = hashPassword(password)
-    let userData
+    const { email, password, google } = req.body
 
-    db.query(`SELECT * FROM users WHERE email=?`, [email], (err,result)=> {
+    db.query(`SELECT * FROM users WHERE email=?`, [email], async (err,result)=> {
         if (err) {
             return res.status(500).json({ error: "Server error" });
         }
         if (result.length === 0) {
-            db.query(`INSERT INTO users (email, password, google) VALUES (?, ?, ?)`, [email,hash, google], (err, result) => {
+            const hash = await bcrypt.hash(password, 10)
+            db.query(`INSERT INTO users (email, password, google) VALUES (?, ?, ?)`, [email, hash, google], (err, result) => {
                 if (err) {
                     return res.status(500).json({ error: "Server error" });
                 }
-                userData = {id: result.insertId, google, email, password}
-                return res.json(userData); 
+                db.query(`SELECT * FROM users WHERE id = ?`, [result.insertId], (err, rows) => {
+                    if (err) {
+                        return res.status(500).json({ error: "Server error" });
+                    }
+                    if (rows.length === 0) {
+                        return res.status(500).json({ error: "Server error" });
+                    }
+                    const newUser = { ...rows[0] }
+                    delete newUser.password
+                    delete newUser.verificationCode
+                    delete newUser.verificationCodeExpires
+                    return res.json(newUser);
+                })
             });
             return
         }
-        userData = result[0]
-        const match = comparePassword(password, userData.password)
-        if (!match) {
-            return res.status(401).json({ error: "Wrong password" })
+
+        const userData = result[0]
+        if (!google) {
+            const match = await bcrypt.compare(password, userData.password)
+            if (!match) {
+                return res.status(401).json({ error: "Wrong password" })
+            }
         }
-        res.json(userData)
+
+        const safeUser = { ...userData }
+        delete safeUser.password
+        delete safeUser.verificationCode
+        delete safeUser.verificationCodeExpires
+        res.json(safeUser)
 
     })
 })
@@ -86,14 +94,19 @@ app.get('/login/:email', (req,res)=> {
         if (result.length === 0) {
             return res.status(404).json({ error: "Don't exist" })
         }
-        res.json(result[0])
+        const safeUser = { ...result[0] }
+        delete safeUser.password
+        delete safeUser.verificationCode
+        delete safeUser.verificationCodeExpires
+        res.json(safeUser)
     })
 })
 
 
-app.patch('/newPassword', (req,res)=> {
+
+app.patch('/newPassword', async (req,res)=> {
     const {password, email} = req.body
-    const hash = hashPassword(password)
+    const hash = await bcrypt.hash(password, 10)
 
     db.query(`UPDATE users SET password = ? WHERE email = ?`, [hash,email], (err,result)=> {
         if (err) {
@@ -140,12 +153,12 @@ async function sendVerificationEmail(email, code) {
         return
     }
 }
-app.patch('/verification', (req,res) => {
+app.patch('/verification', async (req,res) => {
     const {email} = req.body
     const randomCode = String(Math.floor(100000 + Math.random() * 900000));
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
     sendVerificationEmail(email, randomCode)
-    const hash = hashPassword(randomCode)
+    const hash = await bcrypt.hash(randomCode, 10)
     db.query(`UPDATE users SET verificationCode = ?, verificationCodeExpires = ? WHERE email = ?`, [hash,expiresAt, email], (err, result) => {
         if (err) {
             return res.status(500).json({error: "Update Failed"})
@@ -154,17 +167,16 @@ app.patch('/verification', (req,res) => {
     })
 })
 
-app.get('/verification', (req,res)=> {
-    const {email, code} = req.body
-    db.query(`SELECT * FROM users WHERE email = ?`, [email], (err,result)=> {
+
+app.get('/verification', async (req,res)=> {
+    const {email, code} = req.query
+    db.query(`SELECT * FROM users WHERE email = ?`, [email], async (err,result)=> {
         if (err) {
             return res.status(500).json({error: "Update Failed"})
         }
-        if (comparePassword(code,result[0].verificationCode)) {
-            return res.json({success: true})
-        }
+        const match = await bcrypt.compare(code, result[0].verificationCode)
+        return res.json({success: match})
     })
-    return res.json({success: false})
 
 })
 
@@ -193,15 +205,19 @@ app.patch('/user/:id', (req, res) => {
             console.log("Update failed:", err)
             return res.status(500).json({ error: "Server error" })
         }
-        db.query(`SELECT * FROM users WHERE id = ?`, [id], (err, rows) => {
+        db.query(`SELECT * FROM users WHERE id = ?`, [id], (err, result) => {
             if (err) {
                 console.log("Fetch after update failed:", err)
                 return res.status(500).json({ error: "Server error" })
             }
-            if (rows.length === 0) {
+            if (result.length === 0) {
                 return res.status(404).json({ error: "User not found" })
             }
-            res.json(rows[0])
+            const safeUser = { ...result[0] }
+            delete safeUser.password
+            delete safeUser.verificationCode
+            delete safeUser.verificationCodeExpires
+            res.json(safeUser)
         })
     })
 })
