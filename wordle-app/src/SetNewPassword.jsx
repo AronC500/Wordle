@@ -10,10 +10,10 @@ function NewPassword() {
     const [show, setShow] = useState(false)
     const [errorMessage, setErrorMessage]  = useState('')
     const [isInvalid, setisInvalid] = useState(false)
-    navigate('/login')
 
     useEffect(() => {
         if (!email) {
+            navigate('/login')
 
         }
     }, [])
@@ -36,13 +36,14 @@ function NewPassword() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({password,email})
-            })
+         })
+        const data = await response.json()
         if (response.status === 500) {
-            console.log(response.error) 
+            console.log(data.error) 
             return
         }
         if (response.status === 200) {
-            console.log(response.error)
+            console.log(data.error)
             setErrorMessage("Your new password must be different than your previous password.")
             setisInvalid(true)
             return
@@ -60,8 +61,9 @@ function NewPassword() {
                 },
                 body: JSON.stringify({password,email})
             })
+            const data = await response.json()
             if (response.status === 500) {
-                console.log(response.error) 
+                console.log(data.error) 
                 return
             }
             if (response.ok) {
@@ -82,20 +84,21 @@ function NewPassword() {
                 <div className="newpasswordtext"> Your email <span style={{fontWeight:600}}>{email}</span> has been verified. Please set a new password, and we'll log you in.
                 </div>
             </div>
-            <div className="password">
+            <div className="password" style={{marginTop:"16px"}}>
                     <div>Password</div>
                     <input     maxLength={255} className= {isInvalid ? 'inputInvalid': 'inputNormal'} type={show ? 'text' : 'password'} onChange = {InputChange}/>
                     <button onClick = {showText} className="pPasswordEdit">{passText}</button>
-                {isInvalid &&
+
+            </div>
+            {isInvalid &&
                 <div className="setnewpassworderror">
                     <img src="/error.png" style={{width:"13px",height:"13px", paddingTop:"1.5px"}}/>
                     <div>{errorMessage}</div>
                 </div>
                 
                 }
-            </div>
 
-            <div className="submit">
+            <div className="submit" style={{marginTop:"16px"}}>
                 <button onClick={checkPassword} className="submitbutton">Set password</button>
             </div>
             

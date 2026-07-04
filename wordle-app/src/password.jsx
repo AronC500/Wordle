@@ -3,8 +3,7 @@ import {useNavigate, useLocation} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 
 function Password() {
-//test password.jsx page, setnew password page, updatedpassword page,  forgotpassword page , test tomorrow verification code and see if it expire.
-//resend domain thing(make sure write in google doc)
+
     const location = useLocation()
     const email =  location.state?.email || ''
     const [passText, setPassText] = useState('Show')
@@ -12,10 +11,10 @@ function Password() {
     const [password, setPassword] = useState('')
     const [isInvalid, setisInvalid] = useState(false)
     const navigate = useNavigate()
-    navigate('/login')
 
     useEffect(() => {
         if (!email) {
+            navigate('/login')
         }
     }, [])
 
@@ -29,17 +28,18 @@ function Password() {
             },
             body: JSON.stringify({email,password})
         })
+
+        const data = await response.json()
         if (response.status=== 500 || response.status === 404) {
-            console.log(response.error)
+            console.log(data.error)
             return
         }
         if (response.status === 401) {
-            console.log(response.error)
+            console.log(data.error)
             setisInvalid(true)
             return
 
         }
-        const data = await response.json()
         if (response.ok) {
             localStorage.setItem('user', JSON.stringify(data))
             setisInvalid(false)
@@ -84,9 +84,8 @@ function Password() {
                 <a onClick={()=> navigate('/login/password/forgot', {state: {email, sendCode: true}})} className="forgot">Forgot your password?</a>
             </div>
             {isInvalid && <div className="errormessage">The password you entered is incorrect. Please try again. </div>}
-            <div className="buttons">
+            <div className="buttons" style={{marginTop:"10px"}}>
                 <button onClick = {LogIn} className="loginPass">Log in</button>
-                <button className="code">Email me a one-time code</button>
             </div>
             </div>
         </div>

@@ -5,7 +5,6 @@
     align-items: center;
     width: 100%;
     margin-top: clamp(48px, 12vh, 100px);
-    gap: 30px;
     padding: 0 16px;
     box-sizing: border-box;
 }

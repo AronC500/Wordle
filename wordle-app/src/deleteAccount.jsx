@@ -9,10 +9,11 @@ function DeleteAccount() {
     const [text, setText] = useState('')
     const [confirm, setConfirm] = useState(false)
     const [deleted, setDeleted] = useState(false)
-    navigate('/login')
 
     useEffect(()=> {
         if (!email) {
+            navigate('/login')
+
         }
     }, [])
     function textChange(e) {
@@ -26,8 +27,9 @@ function DeleteAccount() {
             },
             body: JSON.stringify({email})
         })
+        const data = await response.json()
         if (!response.ok) {
-            console.log(response.error)
+            console.log(data.error)
             return
         }
         setDeleted(true)

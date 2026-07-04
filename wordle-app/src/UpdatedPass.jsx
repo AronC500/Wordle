@@ -5,10 +5,11 @@ function UpdatedPass() {
     const navigate = useNavigate()
     const location = useLocation()
     const email = location.state?.email
-    navigate('/login')
 
     useEffect(() => {
         if (!email) {
+            navigate('/login')
+
         }
     }, [])
     async function continueButton() {
@@ -16,12 +17,13 @@ function UpdatedPass() {
             method: 'GET'
         })
 
-        if (response.status === 404 || response.status === 500) {
-            console.log(response.error)
-            return
-        }
+
 
         const data = await response.json()
+        if (response.status === 404 || response.status === 500) {
+            console.log(data.error)
+            return
+        }
         if (response.ok) {     
             localStorage.setItem('user', JSON.stringify(data))
             navigate('/game')

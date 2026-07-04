@@ -21,17 +21,17 @@ function ForgotPassword() {
         })
         const data = await response.json()
         if (response.status === 500 || response.status === 404) {
-            console.log(response.error)
+            console.log(data.error)
             return
         }
         if (response.ok) {
             setVerificationExpire(data.expiresAt)
         }
     }
-    navigate('/login')
 
     useEffect(() => {
         if (!email) {
+            navigate('/login')
             return
         }
         sendVerificationCode()
@@ -51,20 +51,19 @@ function ForgotPassword() {
     }
 
     function requestCode() {
-        setSendCode(!sendCode)
-        setShowPopUp(true)
-        sendVerificationCode();
-
+        setSendCode(!sendCode);
+        setShowPopUp(true);
     }
     async function submitCode() {
         const isNotExpired = new Date(verificationExpire) > new Date();
-        const response = await fetch('http://localhost:3000/verification', {
+        const response = await fetch(`http://localhost:3000/verification?email=${encodeURIComponent(email)}&code=${encodeURIComponent(input)}`, {
             method:'GET'
         })
-        if (response.status === 500) {
-            console.log(response.error)
-        }
+
         const data = await response.json()
+        if (response.status === 500) {
+            console.log(data.error)
+        }
         if (data.success && isNotExpired) {
             navigate("/login/password/SetNewPassword", {
                 state: { email }
@@ -103,7 +102,7 @@ function ForgotPassword() {
             {showPopUp &&
             <div className="popup">
                 <img style={{width:"23px",height:"23px"}} src="/check.png"/>
-                <span style={{marginRight:"70px", marginLeft:"15px"}}>We've sent another code to {email}</span>
+                <span style={{marginRight:"70px", marginLeft:"15px", textAlign:'center'}}>We've sent another code to aronchen2004@gmail.com{email}</span>
                 <button onClick={()=>setShowPopUp(false)} style={{all:"unset", cursor:"pointer"}}> 
                     <img style={{width:"13px",height:"13px"}} src="/blackx.png"/>
                 </button>
