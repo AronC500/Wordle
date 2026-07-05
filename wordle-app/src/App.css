@@ -814,3 +814,11 @@ ul {
         font-size: 11px;
     }
 }
+@media(max-height:650px) {
+    .footer {
+        bottom:10px;
+
+
+    }
+
+}
