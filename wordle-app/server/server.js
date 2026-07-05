@@ -44,7 +44,7 @@ app.post('/login', (req,res) => {
                 if (err) {
                     return res.status(500).json({ error: "Server error" });
                 }
-                db.query(`SELECT * FROM users WHERE id = ?`, [insertResult.insertId], (err, rows) => {
+                db.query(`SELECT * FROM users WHERE id = ?`, [result.insertId], (err, rows) => {
                     if (err) {
                         return res.status(500).json({ error: "Server error" });
                     }
