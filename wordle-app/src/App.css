@@ -578,6 +578,8 @@
 }
 
 .footer {
+    position:fixed;
+    bottom:20px;
     display:flex;
     color:white;
     gap:5px;
