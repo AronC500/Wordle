@@ -8,7 +8,8 @@ function Login() {
     const location = useLocation()
     const [message, setShowMessage] = useState('')
     const email = location.state?.email || ''
-    const googleLogin =  useGoogleLogin({
+    const googleLogin = useGoogleLogin({
+        scope: 'openid profile email',
         onSuccess: async (response) => {
             const user = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
                 headers: {
@@ -16,8 +17,10 @@ function Login() {
                 },
             })
             const data = await user.json()
+            console.log('Google userinfo:', data)
+    
             const databaseresponse = await fetch("https://wordle-production-4ba9.up.railway.app/login", {
-                method:"POST",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -36,10 +39,10 @@ function Login() {
                 console.log(userData.error)
             }
         },
-        onError: () => {
-            console.log("Google Login failed")
+        onError: (err) => {
+            console.log("Google Login failed", err)
         }
-    })  
+    }) 
     const [input, setInput] = useState(email)
     const [isInvalid, setIsInvalid] = useState(false)
     async function submitEmail() {
