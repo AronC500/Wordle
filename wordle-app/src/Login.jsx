@@ -9,7 +9,6 @@ function Login() {
     const [message, setShowMessage] = useState('')
     const email = location.state?.email || ''
     const googleLogin = useGoogleLogin({
-        scope: 'openid profile email',
         onSuccess: async (response) => {
             console.log('GOOGLE LOGIN SUCCESS FIRED', response)
 

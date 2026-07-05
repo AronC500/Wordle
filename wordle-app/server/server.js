@@ -8,7 +8,6 @@ dotenv.config()
 const {Resend} = require ('resend')
 const resend = new Resend(process.env.RESEND)
 
-//resend domain thing(make sure write in google doc too), host. 
 const app = express()
 
 const db = mysql.createConnection({
