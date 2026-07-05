@@ -13,7 +13,7 @@ function UpdatedPass() {
         }
     }, [])
     async function continueButton() {
-        const response = await fetch(`http://localhost:3000/login/${encodeURIComponent(email)}`, {
+        const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login/${encodeURIComponent(email)}`, {
             method: 'GET'
         })
 

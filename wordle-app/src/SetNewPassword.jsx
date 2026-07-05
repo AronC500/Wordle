@@ -30,7 +30,7 @@ function NewPassword() {
     }
 
     async function checkPassword() {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('https://wordle-production-4ba9.up.railway.app/login', {
                 method:"POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -54,7 +54,7 @@ function NewPassword() {
             setisInvalid(true)
         }
         else {
-            const response = await fetch('http://localhost:3000/newPassword', {
+            const response = await fetch('https://wordle-production-4ba9.up.railway.app/newPassword', {
                 method:"PATCH",
                 headers: {
                     "Content-Type": "application/json"

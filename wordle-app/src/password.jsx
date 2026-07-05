@@ -21,7 +21,7 @@ function Password() {
 
 
     async function LogIn() {
-        const response = await fetch(`http://localhost:3000/login`, {
+        const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login`, {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -12,7 +12,7 @@ function ForgotPassword() {
     const [sendCode, setSendCode] = useState(location.state?.sendCode)
 
     async function sendVerificationCode() {
-        const response = await fetch('http://localhost:3000/verification', {
+        const response = await fetch('https://wordle-production-4ba9.up.railway.app/verification', {
             method:"PATCH",
             headers: {
                 'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ function ForgotPassword() {
     }
     async function submitCode() {
         const isNotExpired = new Date(verificationExpire) > new Date();
-        const response = await fetch(`http://localhost:3000/verification?email=${encodeURIComponent(email)}&code=${encodeURIComponent(input)}`, {
+        const response = await fetch(`https://wordle-production-4ba9.up.railway.app/verification?email=${encodeURIComponent(email)}&code=${encodeURIComponent(input)}`, {
             method:'GET'
         })
 

@@ -16,7 +16,7 @@ function Login() {
                 },
             })
             const data = await user.json()
-            const databaseresponse = await fetch("http://localhost:3000/login", {
+            const databaseresponse = await fetch("https://wordle-production-4ba9.up.railway.app/login", {
                 method:"POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -51,7 +51,7 @@ function Login() {
         else {        
             setIsInvalid(false)
         }
-        const response = await fetch(`http://localhost:3000/login/${encodeURIComponent(input)}`, {
+        const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login/${encodeURIComponent(input)}`, {
             method: 'GET'
         })
 

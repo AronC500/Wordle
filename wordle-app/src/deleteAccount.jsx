@@ -20,7 +20,7 @@ function DeleteAccount() {
         setText(e.target.value)
     }
     async function deleteAccount() {
-        const response = await fetch('http://localhost:3000/deleteAccount', {
+        const response = await fetch('https://wordle-production-4ba9.up.railway.app/deleteAccount', {
             method:"DELETE",
             headers: {
                 "Content-Type": "application/json"

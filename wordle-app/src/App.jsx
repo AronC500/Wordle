@@ -104,7 +104,7 @@ function App() {
 
     async function saveSetting(localKey, value, dbField) {
         if (user) {
-            const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+            const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
                 method: 'PATCH',
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -220,7 +220,7 @@ function App() {
                 setShakeRow(null)
                 setJustWon(false)
                 setCurrentCol(0)
-                const response = await fetch(`http://localhost:3000/user/${parsedUser.id}`, {
+                const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${parsedUser.id}`, {
                     method: 'PATCH',
                     headers: { 
                         'Content-Type': 
@@ -290,7 +290,7 @@ function App() {
         }
     
         if (user) {
-            const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+            const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
                 method: 'PATCH',
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -396,7 +396,7 @@ function App() {
     
         console.log('updates being sent:', updates)   
     
-        const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+        const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
             method: 'PATCH',
             headers: { 
                 'Content-Type': 'application/json' 
