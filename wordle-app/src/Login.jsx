@@ -11,6 +11,8 @@ function Login() {
     const googleLogin = useGoogleLogin({
         scope: 'openid profile email',
         onSuccess: async (response) => {
+            console.log('GOOGLE LOGIN SUCCESS FIRED', response)
+
             const user = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
                 headers: {
                     Authorization: `Bearer ${response.access_token}`
