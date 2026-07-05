@@ -8,20 +8,17 @@ dotenv.config()
 const {Resend} = require ('resend')
 const resend = new Resend(process.env.RESEND)
 
+//resend domain thing(make sure write in google doc too), host. 
 const app = express()
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    ssl: {
-        minVersion: 'TLSv1.2',
-        rejectUnauthorized: true
-    }
-})
+    database: process.env.DB_NAME
 
+
+})
 db.connect((err)=> {
     if (err) {
         console.log(err)
@@ -48,7 +45,7 @@ app.post('/login', (req,res) => {
                 if (err) {
                     return res.status(500).json({ error: "Server error" });
                 }
-                db.query(`SELECT * FROM users WHERE id = ?`, [result.insertId], (err, rows) => {
+                db.query(`SELECT * FROM users WHERE id = ?`, [insertResult.insertId], (err, rows) => {
                     if (err) {
                         return res.status(500).json({ error: "Server error" });
                     }
