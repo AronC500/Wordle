@@ -102,7 +102,7 @@ function ForgotPassword() {
             {showPopUp &&
             <div className="popup">
                 <img style={{width:"23px",height:"23px"}} src="/check.png"/>
-                <span style={{marginRight:"70px", marginLeft:"15px", textAlign:'center'}}>We've sent another code to aronchen2004@gmail.com{email}</span>
+                <span style={{marginRight:"70px", marginLeft:"15px", textAlign:'center'}}>We've sent another code to {email}</span>
                 <button onClick={()=>setShowPopUp(false)} style={{all:"unset", cursor:"pointer"}}> 
                     <img style={{width:"13px",height:"13px"}} src="/blackx.png"/>
                 </button>
