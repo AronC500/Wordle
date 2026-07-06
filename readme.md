@@ -18,6 +18,8 @@ A full-stack Wordle clone built with React, TypeScript, and Node.js.
 - MySQL
 - Vercel
 - Resend
+- OAuth 2.0 (Google Sign-In)
+
 
 # Live Demo
 https://wordle-kappa-one.vercel.app/ 
