@@ -142,7 +142,7 @@ function createEmailTemplate({ title, message, code }) {
   }
 async function sendVerificationEmail(email, code) {
     const {data, error} = await resend.emails.send({
-        from:'onboarding@resend.dev',
+        from:'code@yannieismylover.uk',
         to: email,
         html:createEmailTemplate({ title: "Verify your account", message: "Use the code below to verify your account.", code}),
         subject:'Verification Code',
