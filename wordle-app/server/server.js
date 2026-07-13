@@ -5,7 +5,7 @@ const dotenv = require('dotenv')
 const bcrypt = require('bcrypt')
 dotenv.config()
 
-const {Resend} = require ('resend')
+const { Resend } = require('resend')
 const resend = new Resend(process.env.RESEND)
 
 const app = express()
@@ -17,7 +17,7 @@ const db = mysql.createConnection({
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE
 });
-db.connect((err)=> {
+db.connect((err) => {
     if (err) {
         console.log(err)
     }
@@ -30,10 +30,10 @@ app.use(cors())
 app.use(express.json())
 
 
-app.post('/login', (req,res) => {
+app.post('/login', (req, res) => {
     const { email, password, google } = req.body
 
-    db.query(`SELECT * FROM users WHERE email=?`, [email], async (err,result)=> {
+    db.query(`SELECT * FROM users WHERE email=?`, [email], async (err, result) => {
         if (err) {
             return res.status(500).json({ error: "Server error" });
         }
@@ -76,18 +76,18 @@ app.post('/login', (req,res) => {
 
     })
 })
-app.delete('/deleteAccount', (req,res)=> {
-    const {email} = req.body
-    db.query(`DELETE FROM users WHERE email = ?`, [email], (err,result)=> {
+app.delete('/deleteAccount', (req, res) => {
+    const { email } = req.body
+    db.query(`DELETE FROM users WHERE email = ?`, [email], (err, result) => {
         if (err) {
-            return res.status(500).json({error: "Server error"})
+            return res.status(500).json({ error: "Server error" })
         }
-        return res.status(200).json({success: true})
+        return res.status(200).json({ success: true })
     })
 })
-app.get('/login/:email', (req,res)=> {
+app.get('/login/:email', (req, res) => {
     const email = req.params.email
-    db.query(`SELECT * FROM users WHERE email = ?`, [email], (err,result)=> {
+    db.query(`SELECT * FROM users WHERE email = ?`, [email], (err, result) => {
         if (err) {
             return res.status(500).json({ error: "Server error" })
         }
@@ -104,15 +104,15 @@ app.get('/login/:email', (req,res)=> {
 
 
 
-app.patch('/newPassword', async (req,res)=> {
-    const {password, email} = req.body
+app.patch('/newPassword', async (req, res) => {
+    const { password, email } = req.body
     const hash = await bcrypt.hash(password, 10)
 
-    db.query(`UPDATE users SET password = ? WHERE email = ?`, [hash,email], (err,result)=> {
+    db.query(`UPDATE users SET password = ? WHERE email = ?`, [hash, email], (err, result) => {
         if (err) {
-            return res.status(500).json({error:"server error"})
+            return res.status(500).json({ error: "server error" })
         }
-        return res.status(200).json({success: true})
+        return res.status(200).json({ success: true })
 
     })
 })
@@ -128,10 +128,10 @@ function createEmailTemplate({ title, message, code }) {
             ${message}
           </p>
   
-          ${code? `<div style="font-size: 28px; font-weight: bold; letter-spacing: 6px; margin: 20px 0; padding: 15px; background: #f2f2f2; border-radius: 8px;">
+          ${code ? `<div style="font-size: 28px; font-weight: bold; letter-spacing: 6px; margin: 20px 0; padding: 15px; background: #f2f2f2; border-radius: 8px;">
               ${code}
             </div>`: ""
-          }
+        }
   
           <p style="font-size: 12px; color: gray;">
             If you didn’t request this, you can ignore this email.
@@ -139,43 +139,43 @@ function createEmailTemplate({ title, message, code }) {
         </div>
       </div>
     `;
-  }
+}
 async function sendVerificationEmail(email, code) {
-    const {data, error} = await resend.emails.send({
-        from:'code@yannieismylover.uk',
+    const { data, error } = await resend.emails.send({
+        from: 'code@yannieismylover.uk',
         to: email,
-        html:createEmailTemplate({ title: "Verify your account", message: "Use the code below to verify your account.", code}),
-        subject:'Verification Code',
-        reply_to:'aronchen500@gmail.com'
+        html: createEmailTemplate({ title: "Verify your account", message: "Use the code below to verify your account.", code }),
+        subject: 'Verification Code',
+        reply_to: 'aronchen500@gmail.com'
     })
     if (error) {
         console.log('Failed to send code:', error)
         return
     }
 }
-app.patch('/verification', async (req,res) => {
-    const {email} = req.body
+app.patch('/verification', async (req, res) => {
+    const { email } = req.body
     const randomCode = String(Math.floor(100000 + Math.random() * 900000));
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
     sendVerificationEmail(email, randomCode)
     const hash = await bcrypt.hash(randomCode, 10)
-    db.query(`UPDATE users SET verificationCode = ?, verificationCodeExpires = ? WHERE email = ?`, [hash,expiresAt, email], (err, result) => {
+    db.query(`UPDATE users SET verificationCode = ?, verificationCodeExpires = ? WHERE email = ?`, [hash, expiresAt, email], (err, result) => {
         if (err) {
-            return res.status(500).json({error: "Update Failed"})
+            return res.status(500).json({ error: "Update Failed" })
         }
-        return res.json({success: true, expiresAt})
+        return res.json({ success: true, expiresAt })
     })
 })
 
 
-app.get('/verification', async (req,res)=> {
-    const {email, code} = req.query
-    db.query(`SELECT * FROM users WHERE email = ?`, [email], async (err,result)=> {
+app.get('/verification', async (req, res) => {
+    const { email, code } = req.query
+    db.query(`SELECT * FROM users WHERE email = ?`, [email], async (err, result) => {
         if (err) {
-            return res.status(500).json({error: "Update Failed"})
+            return res.status(500).json({ error: "Update Failed" })
         }
         const match = await bcrypt.compare(code, result[0].verificationCode)
-        return res.json({success: match})
+        return res.json({ success: match })
     })
 
 })
