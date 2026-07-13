@@ -1,59 +1,59 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { validWords, answerList } from './wordlist.js'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function App() {
-        const startDate = new Date(2021,5,19)
-        const today = new Date()
-        var daysDifference = Math.floor((today-startDate) / (1000*60*60*24))
-        const currentWord = answerList[daysDifference % answerList.length]
-        const [shakeRow, setShakeRow] = useState(null)
-        const navigate = useNavigate()
-        const [showBurger, setShowBurger] = useState(false)
+    const startDate = new Date(2021, 5, 19)
+    const today = new Date()
+    var daysDifference = Math.floor((today - startDate) / (1000 * 60 * 60 * 24))
+    const currentWord = answerList[daysDifference % answerList.length]
+    const [shakeRow, setShakeRow] = useState(null)
+    const navigate = useNavigate()
+    const [showBurger, setShowBurger] = useState(false)
 
-        const isLoggedIn = localStorage.getItem('user') !== null 
-    
-        const [guesses, setGuesses] = useState(isLoggedIn? 
-            [
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-            ]
-            : JSON.parse(localStorage.getItem('guest_guess')) || 
-            [
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-            ]
-        )
+    const isLoggedIn = localStorage.getItem('user') !== null
 
-        const [currentRow, setCurrentRow] = useState(isLoggedIn ? 0 : Number(localStorage.getItem('guest_currentrow')) || 0)
-        const [justWon, setJustWon] = useState(false)
-        const [currentCol, setCurrentCol] = useState(0)
-        const [disableInput, setdisableInput] = useState(isLoggedIn ? true : JSON.parse(localStorage.getItem('guest_gameover')) || false)
-        const [showGamePopup, setShowGamePopup] = useState(false)
-        const [MessagetoShow, setMessagetoShow] = useState('')
-        const [gameOver, isGameOver] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('guest_gameover')) || false)
-        const [winRow, setwinRow] = useState(isLoggedIn ? null : (localStorage.getItem('guest_winrow') === null ? null : Number(localStorage.getItem('guest_winrow'))))
-        const [keyboardColor, setkeyboardColor] = useState(isLoggedIn ? {} : JSON.parse(localStorage.getItem('guest_keyboardcolor')) || {})
-        const [showSettings, setShowSettings] = useState(false)
-        const [showStatistics, setShowStatistics] = useState(false)
-        const [showHowPlay, setShowHowPlay] = useState(localStorage.getItem('howplay') === null)
-        const [hardmode, setHardMode] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('guest_hardmode')) || false)
-        const [keyboardonly, setkeyboardonly] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('guest_keyboardonly')) || false)
-        const [user, setUser] = useState(null)
-        const keyboard = [
-            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-            ['ENTER','Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE']
+    const [guesses, setGuesses] = useState(isLoggedIn ?
+        [
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
         ]
+        : JSON.parse(localStorage.getItem('guest_guess')) ||
+        [
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+        ]
+    )
+
+    const [currentRow, setCurrentRow] = useState(isLoggedIn ? 0 : Number(localStorage.getItem('guest_currentrow')) || 0)
+    const [justWon, setJustWon] = useState(false)
+    const [currentCol, setCurrentCol] = useState(0)
+    const [disableInput, setdisableInput] = useState(isLoggedIn ? true : JSON.parse(localStorage.getItem('guest_gameover')) || false)
+    const [showGamePopup, setShowGamePopup] = useState(false)
+    const [MessagetoShow, setMessagetoShow] = useState('')
+    const [gameOver, isGameOver] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('guest_gameover')) || false)
+    const [winRow, setwinRow] = useState(isLoggedIn ? null : (localStorage.getItem('guest_winrow') === null ? null : Number(localStorage.getItem('guest_winrow'))))
+    const [keyboardColor, setkeyboardColor] = useState(isLoggedIn ? {} : JSON.parse(localStorage.getItem('guest_keyboardcolor')) || {})
+    const [showSettings, setShowSettings] = useState(false)
+    const [showStatistics, setShowStatistics] = useState(false)
+    const [showHowPlay, setShowHowPlay] = useState(localStorage.getItem('howplay') === null)
+    const [hardmode, setHardMode] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('guest_hardmode')) || false)
+    const [keyboardonly, setkeyboardonly] = useState(isLoggedIn ? false : JSON.parse(localStorage.getItem('guest_keyboardonly')) || false)
+    const [user, setUser] = useState(null)
+    const keyboard = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE']
+    ]
 
 
     function resetGameState() {
@@ -61,28 +61,28 @@ function App() {
         localStorage.removeItem('guest_currentrow')
         localStorage.removeItem('guest_winrow')
         localStorage.removeItem('guest_gameover')
-            localStorage.removeItem('guest_keyboardcolor')
-        
-            setGuesses([
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-            ])
-            setCurrentRow(0)
-            setwinRow(null)
-            isGameOver(false)
-            setkeyboardColor({})
-            setdisableInput(false)
-            setShowGamePopup(false)
-            setMessagetoShow('')
-            setShakeRow(null)
-            setJustWon(false)
-            setCurrentCol(0)
-    
-    }    
+        localStorage.removeItem('guest_keyboardcolor')
+
+        setGuesses([
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+            ['', '', '', '', ''],
+        ])
+        setCurrentRow(0)
+        setwinRow(null)
+        isGameOver(false)
+        setkeyboardColor({})
+        setdisableInput(false)
+        setShowGamePopup(false)
+        setMessagetoShow('')
+        setShakeRow(null)
+        setJustWon(false)
+        setCurrentCol(0)
+
+    }
 
     function reportBug() {
         const deviceSummary = `
@@ -106,11 +106,11 @@ function App() {
         if (user) {
             const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
                 method: 'PATCH',
-                headers: { 
-                    'Content-Type': 'application/json' 
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
-                    [dbField]: value 
+                body: JSON.stringify({
+                    [dbField]: value
                 })
             })
             if (!response.ok) {
@@ -124,7 +124,7 @@ function App() {
             localStorage.setItem(localKey, JSON.stringify(value))
         }
     }
-    
+
     function getBrowserName() {
         const userAgent = navigator.userAgent
         if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
@@ -150,7 +150,7 @@ function App() {
         else if (e.key === 'Backspace') {
             keyPress('DELETE')
         }
-        else if (e.key.match(/^[a-zA-Z]$/)) {  
+        else if (e.key.match(/^[a-zA-Z]$/)) {
             keyPress(e.key.toUpperCase())
         }
         return
@@ -158,14 +158,14 @@ function App() {
     useEffect(() => {
         if (!disableInput && !keyboardonly) {
             window.addEventListener('keydown', handleKeyDown)
-        }        
+        }
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
         }
     }, [currentCol, currentRow, disableInput, keyboardonly])
 
-    useEffect(()=> {
+    useEffect(() => {
         const storedUser = localStorage.getItem('user')
         const parsedUser = storedUser ? JSON.parse(storedUser) : null
 
@@ -187,7 +187,85 @@ function App() {
                             setdisableInput(false)
                         }
                     }, 1800)
-                if (gameState.gameOver && gameState.winRow === null) {
+                    if (gameState.gameOver && gameState.winRow === null) {
+                        setdisableInput(true)
+                        setTimeout(() => {
+                            setShowGamePopup(true)
+                            setMessagetoShow(currentWord.toUpperCase())
+                        }, 1800)
+                    }
+                }
+                else {
+                    const freshState = {
+                        guesses: [
+                            ['', '', '', '', ''],
+                            ['', '', '', '', ''],
+                            ['', '', '', '', ''],
+                            ['', '', '', '', ''],
+                            ['', '', '', '', ''],
+                            ['', '', '', '', ''],
+                        ],
+                        currentRow: 0,
+                        winRow: null,
+                        gameOver: false,
+                        keyboardColor: {}
+                    }
+                    setGuesses(freshState.guesses)
+                    setCurrentRow(freshState.currentRow)
+                    setwinRow(freshState.winRow)
+                    isGameOver(freshState.gameOver)
+                    setkeyboardColor(freshState.keyboardColor)
+                    setShowGamePopup(false)
+                    setMessagetoShow('')
+                    setShakeRow(null)
+                    setJustWon(false)
+                    setCurrentCol(0)
+                    const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${parsedUser.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type':
+                                'application/json'
+                        },
+                        body: JSON.stringify({
+                            gameState: freshState,
+                            lastPuzzleNumber: daysDifference
+                        })
+                    })
+                    const data = await response.json()
+                    if (!response.ok) {
+                        console.log(data.error)
+                    }
+                    setdisableInput(false)
+                }
+            }
+
+            else {
+                const savedPuzzleNumber = localStorage.getItem('guest_puzzleNumber')
+                if (Number(savedPuzzleNumber) !== daysDifference) {
+                    localStorage.setItem('guest_puzzleNumber', daysDifference)
+                    resetGameState()
+                }
+                else {
+                    const saved = JSON.parse(localStorage.getItem('guest_keyboardcolor'))
+                    if (saved) {
+                        setdisableInput(true)
+                        if (gameOver) {
+                            setCurrentRow(6)
+                        }
+                        setTimeout(() => {
+                            setkeyboardColor(saved)
+                            if (!gameOver) {
+                                setdisableInput(false)
+                            }
+                        }, 1800)
+                    }
+                    else {
+                        setdisableInput(false)
+                    }
+                }
+
+                localStorage.setItem('howplay', true)
+                if (!(Number(savedPuzzleNumber) !== daysDifference) && gameOver && !winRow) {
                     setdisableInput(true)
                     setTimeout(() => {
                         setShowGamePopup(true)
@@ -195,86 +273,8 @@ function App() {
                     }, 1800)
                 }
             }
-            else {
-                const freshState = {
-                    guesses: [
-                        ['', '', '', '', ''],
-                        ['', '', '', '', ''],
-                        ['', '', '', '', ''],
-                        ['', '', '', '', ''],
-                        ['', '', '', '', ''],
-                        ['', '', '', '', ''],
-                    ],
-                    currentRow: 0,
-                    winRow: null,
-                    gameOver: false,
-                    keyboardColor: {}
-                }
-                setGuesses(freshState.guesses)
-                setCurrentRow(freshState.currentRow)
-                setwinRow(freshState.winRow)
-                isGameOver(freshState.gameOver)
-                setkeyboardColor(freshState.keyboardColor)
-                setShowGamePopup(false)
-                setMessagetoShow('')
-                setShakeRow(null)
-                setJustWon(false)
-                setCurrentCol(0)
-                const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${parsedUser.id}`, {
-                    method: 'PATCH',
-                    headers: { 
-                        'Content-Type': 
-                        'application/json' 
-                    },
-                    body: JSON.stringify({
-                        gameState: freshState,
-                        lastPuzzleNumber: daysDifference
-                    })
-                })
-                const data = await response.json()
-                if (!response.ok) {
-                    console.log(data.error)
-                }
-                setdisableInput(false)
-                }
-            }
-
-        else {
-            const savedPuzzleNumber = localStorage.getItem('guest_puzzleNumber')        
-            if ( Number(savedPuzzleNumber) !== daysDifference) {
-                localStorage.setItem('guest_puzzleNumber', daysDifference)
-                resetGameState()
-            }
-            else {
-                const saved = JSON.parse(localStorage.getItem('guest_keyboardcolor'))
-                if (saved) {
-                    setdisableInput(true)
-                    if (gameOver) {
-                        setCurrentRow(6)
-                    }
-                    setTimeout(() => {
-                        setkeyboardColor(saved)
-                        if (!gameOver) {
-                            setdisableInput(false)
-                        }
-                    }, 1800)
-                }
-                else {
-                    setdisableInput(false)
-                }
-            }
-        
-            localStorage.setItem('howplay', true)
-            if (!(Number(savedPuzzleNumber) !== daysDifference) && gameOver && !winRow) {
-                setdisableInput(true)
-                setTimeout(() => {
-                    setShowGamePopup(true)
-                    setMessagetoShow(currentWord.toUpperCase())
-                }, 1800)
-            }
-            }
         }
-    
+
         loadUser()
     }, [])
 
@@ -288,32 +288,32 @@ function App() {
             keyboardColor,
             ...value
         }
-    
+
         if (user) {
             const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
                 method: 'PATCH',
-                headers: { 
-                    'Content-Type': 'application/json' 
+                headers: {
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     gameState: state,
                     lastPuzzleNumber: daysDifference
                 })
-            })     
-            if (!response.ok)    {
+            })
+            if (!response.ok) {
                 console.log(response.error)
                 return
-            }     
+            }
 
-            const data = await response.json();  
+            const data = await response.json();
 
-         const updatedUser = { ...data, gameState: {...data.gameState, currentRow: data.gameState.currentRow + 1}};
+            const updatedUser = { ...data, gameState: { ...data.gameState, currentRow: data.gameState.currentRow + 1 } };
 
-        setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+            setUser(updatedUser);
+            localStorage.setItem('user', JSON.stringify(updatedUser));
 
 
-        } 
+        }
         else {
             localStorage.setItem('guest_guess', JSON.stringify(state.guesses))
             localStorage.setItem('guest_currentrow', state.currentRow)
@@ -325,20 +325,20 @@ function App() {
     }
     function getGreenPositions() {
         const greenPositions = []
-            for (let r = 0; r < currentRow; r++) {
-                for (let c = 0; c < 5; c++) {
-                    const letter = guesses[r][c].toLowerCase()
-                    if (letter === currentWord[c]) {
-                        greenPositions.push({ position: c, letter: letter })
-                    }
+        for (let r = 0; r < currentRow; r++) {
+            for (let c = 0; c < 5; c++) {
+                const letter = guesses[r][c].toLowerCase()
+                if (letter === currentWord[c]) {
+                    greenPositions.push({ position: c, letter: letter })
                 }
             }
+        }
         return greenPositions
     }
     function determineKeyboardColor(word) {
         word.split('').forEach((letter, colIndex) => {
             setkeyboardColor(prev => {
-                const newobj = {...prev}
+                const newobj = { ...prev }
                 if (newobj[letter.toLowerCase()] === 'green') {
                     return newobj
                 }
@@ -350,7 +350,7 @@ function App() {
                     newobj[letter.toLowerCase()] = 'gray'
                 }
                 if (user) {
-                    saveGameState({ keyboardColor: newobj }) 
+                    saveGameState({ keyboardColor: newobj })
                 } else {
                     localStorage.setItem('guest_keyboardcolor', JSON.stringify(newobj))
                 }
@@ -377,11 +377,11 @@ function App() {
     }
 
     async function recordGameResult(won, guessCount) {
-        if (!user)  {
-            return 
+        if (!user) {
+            return
         }
-    
-        console.log('user BEFORE update:', user)   
+
+        console.log('user BEFORE update:', user)
         const updates = {
             gamesPlayed: user.gamesPlayed + 1,
             gamesWon: won ? user.gamesWon + 1 : user.gamesWon,
@@ -389,17 +389,17 @@ function App() {
             maxStreak: won ? Math.max(user.maxStreak, user.currentStreak + 1) : user.maxStreak,
             playedOnce: true
         }
-    
+
         if (won) {
             updates[`WonIN${guessCount}`] = user[`WonIN${guessCount}`] + 1
         }
-    
-        console.log('updates being sent:', updates)   
-    
+
+        console.log('updates being sent:', updates)
+
         const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
             method: 'PATCH',
-            headers: { 
-                'Content-Type': 'application/json' 
+            headers: {
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(updates)
         })
@@ -408,7 +408,7 @@ function App() {
             return
         }
         const data = await response.json()
-        console.log('data received FROM backend:', data)   
+        console.log('data received FROM backend:', data)
         setUser(data)
         localStorage.setItem('user', JSON.stringify(data))
     }
@@ -458,7 +458,7 @@ function App() {
                         determineKeyboardColor(word)
                         setwinRow(currentRow)
                         saveGameState({ winRow: currentRow, currentRow: nextRow })
-                    },1800)
+                    }, 1800)
                     setdisableInput(true)
                     setJustWon(true)
                     setTimeout(() => {
@@ -467,24 +467,24 @@ function App() {
                         isGameOver(true)
                         saveGameState({ winRow: currentRow, currentRow: nextRow, gameOver: true })
                         recordGameResult(true, currentRow + 1)
-                    },3600)
-                    setTimeout(()=> {
+                    }, 3600)
+                    setTimeout(() => {
                         setShowGamePopup(true)
-                    },1800)
+                    }, 1800)
                     setTimeout(() => {
                         setShowGamePopup(false)
                     }, 5000)
                 }
                 else {
                     if (hardmode) {
-                    
+
                         const greenPositions = getGreenPositions()
                         for (let i = 0; i < greenPositions.length; i++) {
                             const position = greenPositions[i].position
                             const letter = greenPositions[i].letter
                             if (word[position] !== letter) {
                                 let lastcoupleletters
-                                switch(position + 1) {
+                                switch (position + 1) {
                                     case 1:
                                         lastcoupleletters = 'st'
                                         break
@@ -508,7 +508,7 @@ function App() {
                                 break
                             }
                         }
-                    
+
                         if (!hardModeFail) {
                             const keyboardEntries = Object.entries(keyboardColor)
                             for (let i = 0; i < keyboardEntries.length; i++) {
@@ -523,7 +523,7 @@ function App() {
                                 }
                             }
                         }
-                    
+
                         if (hardModeFail) {
                             setTimeout(() => {
                                 setShakeRow(null)
@@ -538,34 +538,34 @@ function App() {
                             setdisableInput(false)
                             determineKeyboardColor(word)
                             if (currentRow + 1 === 6) {
-                                setTimeout(()=> {
+                                setTimeout(() => {
                                     isGameOver(true)
                                     setShowGamePopup(true)
                                     setMessagetoShow(currentWord.toUpperCase())
                                     saveGameState({ gameOver: true, winRow: null, currentRow: currentRow + 1 })
                                     recordGameResult(false, 6)
-                            }, 700)
-                        }
-                    },1800)
-                    setdisableInput(true)
-    
+                                }, 700)
+                            }
+                        }, 1800)
+                        setdisableInput(true)
+
                     }
-                    
+
                 }
                 if (!hardModeFail) {
-                    saveGameState({ guesses: guesses, currentRow: currentRow+1}) 
-                    setCurrentRow( currentRow+1)
+                    saveGameState({ guesses: guesses, currentRow: currentRow + 1 })
+                    setCurrentRow(currentRow + 1)
                     setCurrentCol(0)
                 }
-    
+
             }
             if (letter !== 'DELETE') {
                 return;
             }
 
         }
-            
-    
+
+
         if (letter === 'ENTER' && currentCol !== 5) {
             setMessagetoShow("Not enough letters")
             setShowGamePopup(true)
@@ -588,7 +588,7 @@ function App() {
             setGuesses(newArray)
             return;
         }
-    
+
         newArray[currentRow][currentCol] = letter
         setGuesses(newArray)
         setCurrentCol(currentCol + 1)
@@ -597,8 +597,8 @@ function App() {
     function getGuessDistribution(user) {
         const counts = [1, 2, 3, 4, 5, 6].map(num => user[`WonIN${num}`] || 0)
         const maxCount = Math.max(...counts, 1)
-    
-        return counts.map((count, index) => ({num: index + 1, count, percent: (count / maxCount) * 100}))
+
+        return counts.map((count, index) => ({ num: index + 1, count, percent: (count / maxCount) * 100 }))
     }
     var guessDistribution
     if (user) {
@@ -607,314 +607,316 @@ function App() {
     }
 
     return (
-    <div className="parent">
-        {showSettings &&
-        <div className="settingsbackground">
-            <div className="settingspopup">
-                <div className="settingstext">
-                    <div>SETTINGS </div>
-                    <button style={{position:"absolute", right:"-8px"}}className="closebutton" onClick={()=> {
-                        setdisableInput(false)
-                        setShowSettings(false)
-                    }}>
-                    <img  style={{height:"40px", width:"40px"}}src="/Xbutton.png"/>
-                    </button>
+        <div className="parent">
+            {showSettings &&
+                <div className="settingsbackground">
+                    <div className="settingspopup">
+                        <div className="settingstext">
+                            <div>SETTINGS </div>
+                            <button style={{ position: "absolute", right: "-8px" }} className="closebutton" onClick={() => {
+                                setdisableInput(false)
+                                setShowSettings(false)
+                            }}>
+                                <img style={{ height: "40px", width: "40px" }} src="/Xbutton.png" />
+                            </button>
 
-                </div>
-                <div className="settingbody">
-                    <div className="individual">
-                        <div>
-                            <div className="settingbigtext">Hard Mode</div>
-                            <div className="settingsmalltext">Any revealed hints must be used in subsequent guesses</div>
                         </div>
-                        <button onClick={() => {
-                            if (!hardmode) {
-                                if (currentRow > 0 || justWon) {
-                                    setShowGamePopup(true)
-                                    setMessagetoShow("Hard mode can only be enabled at the start of a round")
-                                    setTimeout(() => {
-                                        setShowGamePopup(false)
-                                    }, 1500)
-                                    if (gameOver && winRow === null) {
-                                        setTimeout(()=> {
-                                            setShowGamePopup(true)
-                                            setMessagetoShow(currentWord.toUpperCase())
-                                        }, 1500)
-                                    }
-                                    return
-                                }
-                            }
-
-                            setHardMode(!hardmode)
-                            saveSetting('guest_hardmode', !hardmode, 'hardMode')
-                        }} className={hardmode ? "greenbutton" : "graybutton"}>
-                            <div className='circle'></div>
-                        </button>
-                    </div>
-                    <div className="individual">
-                        <div>
-                            <div className="settingbigtext">Onscreen Keyboard Input Only </div>
-                            <div className="settingsmalltext" style={{width:"400px"}}>Ignore key input except from the onscreen keyboard. Most helpful for users using speech recognition or other assitive devices. </div>
-                        </div>
-                        <button onClick={() => {
-                            setkeyboardonly(!keyboardonly)
-                            saveSetting('guest_keyboardonly', !keyboardonly, 'keyboardOnly')
-                        }} className={keyboardonly ? "greenbutton" : "graybutton"}>
-                             <div className ='circle'></div>
-                        </button>            
-                    </div>
-                    <div className="individual" style={{border:"none"}}>
-                        <div className="settingsmalltext">&copy; 2026 The Aron Times Company</div>
-                        <div className="settingsmalltext">#{daysDifference}</div>
-                    </div>
-
-                </div>
-            </div>
-
-
-        </div>
-        }
-        {showHowPlay &&
-        <div className="settingsbackground">
-            <div className="howplaypopup">
-            <div className="Showhowplayclosebutton">     
-                <button className="closebutton" onClick={()=> {
-                        setdisableInput(false)
-                        setShowHowPlay(false)
-                    }}>
-                    <img  style={{height:"40px", width:"40px"}}src="/Xbutton.png"/>
-                </button>
-                </div>
-            <div>
-                <div className="howplay">How To Play</div>
-                <div className="guess6">Guess the Wordle in 6 tries. </div>
-            </div>
-            <div>
-                <ul>
-                    <li>Each guess must be a valid 5-letter word.</li>
-                    <li>The color of the tiles will change to show how close your guess was to the word.</li>
-                </ul>
-            </div>
-            <div className="examples">
-                <span>Examples</span>
-                <div className="wordy">
-                    <div className="W">W</div>
-                    <div>O</div>
-                    <div>R</div>
-                    <div>D</div>
-                    <div>Y</div>
-                </div>
-                <p><b>W </b>is in the word and in the correct spot.</p>
-            </div>
-            <div className="light">
-            <div className="wordy">
-                    <div className="L">L</div>
-                    <div>I</div>
-                    <div>G</div>
-                    <div>H</div>
-                    <div>T</div>
-            </div>                    
-                <p><b>I</b> is in the word but in the wrong spot.</p>
-            </div>
-            <div className="rogue">
-            <div className="wordy">
-                    <div >R</div>
-                    <div>O</div>
-                    <div>G</div>
-                    <div className="U">U</div>
-                    <div>E</div>
-            </div>                       
-            <p><b>U</b> is not in the word in any spot.</p>
-            </div>
-            <div className="howplayfooter">
-                <div>
-                    </div>
-                    <button onClick={reportBug}>
-                    Report a Bug
-                    </button>              
-            </div>
-            </div>
-        
-
-        </div>
-        }
-        {showStatistics &&
-        <div className="settingsbackground">
-            <div className="statisticpopup">
-                <div className="statisticclosebutton">     
-                <button className="closebutton" onClick={()=> {
-                        setdisableInput(false)
-                        setShowStatistics(false)
-                    }}>
-                    <img  style={{height:"40px", width:"40px"}}src="/Xbutton.png"/>
-                </button>
-                </div>
-                <div className="statistictext">
-                    Statistics
-                </div>
-                <div className="statisticbody">
-                    {!user ?
-                    <>
-                    <img style={{height:"300px", width:"220px"}}src="/statistic.png"/>
-                    <div className="statistictrack">
-                        Track your stats and view badges.
-                    </div>
-                    <div className="statisticaccess">
-                        Access your Wordle badges, win percentage and more with a free account.
-                    </div>
-                    <button onClick={()=> navigate('/login')}className="createfreebutton">
-                        Create a free account
-                    </button>
-                    </>
-                    :
-                    <>
-                    <div className="topstats">
-                        <div className="statitem">
-                            <div className="bignumb">{user.gamesPlayed || 0}</div>
-                            <div className="statlabel">Played</div>
-                        </div>
-                        <div className="statitem">
-                            <div className="bignumb">
-                                {user.gamesPlayed ? Math.round((user.gamesWon / user.gamesPlayed) * 100) : 0}
-                            </div>
-                            <div className="statlabel">Win %</div>
-                        </div>
-                        <div className="statitem">
-                            <div className="bignumb">{user.currentStreak || 0}</div>
-                            <div className="statlabel">Current Streak</div>
-                        </div>
-                         <div className="statitem">
-                            <div className="bignumb">{user.maxStreak || 0}</div>
-                            <div className="statlabel">Max Streak</div>
-                        </div>
-                    </div>
-                    <div className="guesscontainer">
-                        <div className="guesstitle">GUESS DISTRIBUTION</div>
-                        {guessDistribution.map((item) => (
-                            <div className="individualguess" key={item.num}>
-                                <div className="guessnum">{item.num}</div>
-                                <div className="guessbartrack">
-                                    <div className={item.count > 0 ? "guessbarfilled" : "guessbarempty"} style={{ width: item.count > 0 ? `${Math.max(item.percent, 8)}%` : '28px' }} >
-                                        <span className="guesscount">{item.count}</span>
-                                    </div>
+                        <div className="settingbody">
+                            <div className="individual">
+                                <div>
+                                    <div className="settingbigtext">Hard Mode</div>
+                                    <div className="settingsmalltext">Any revealed hints must be used in subsequent guesses</div>
                                 </div>
+                                <button onClick={() => {
+                                    if (!hardmode) {
+                                        if (currentRow > 0 || justWon) {
+                                            setShowGamePopup(true)
+                                            setMessagetoShow("Hard mode can only be enabled at the start of a round")
+                                            setTimeout(() => {
+                                                setShowGamePopup(false)
+                                            }, 1500)
+                                            if (gameOver && winRow === null) {
+                                                setTimeout(() => {
+                                                    setShowGamePopup(true)
+                                                    setMessagetoShow(currentWord.toUpperCase())
+                                                }, 1500)
+                                            }
+                                            return
+                                        }
+                                    }
+
+                                    setHardMode(!hardmode)
+                                    saveSetting('guest_hardmode', !hardmode, 'hardMode')
+                                }} className={hardmode ? "greenbutton" : "graybutton"}>
+                                    <div className='circle'></div>
+                                </button>
+                            </div>
+                            <div className="individual">
+                                <div>
+                                    <div className="settingbigtext">Onscreen Keyboard Input Only </div>
+                                    <div className="settingsmalltext" style={{ width: "400px" }}>Ignore key input except from the onscreen keyboard. Most helpful for users using speech recognition or other assitive devices. </div>
+                                </div>
+                                <button onClick={() => {
+                                    setkeyboardonly(!keyboardonly)
+                                    saveSetting('guest_keyboardonly', !keyboardonly, 'keyboardOnly')
+                                }} className={keyboardonly ? "greenbutton" : "graybutton"}>
+                                    <div className='circle'></div>
+                                </button>
+                            </div>
+                            <div className="individual" style={{ border: "none" }}>
+                                <div className="settingsmalltext">&copy; 2026 The Aron Times Company</div>
+                                <div className="settingsmalltext">#{daysDifference}</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+            {showHowPlay &&
+                <div className="settingsbackground">
+                    <div className="howplaypopup">
+                        <div className="Showhowplayclosebutton">
+                            <button className="closebutton" onClick={() => {
+                                setdisableInput(false)
+                                setShowHowPlay(false)
+                            }}>
+                                <img style={{ height: "40px", width: "40px" }} src="/Xbutton.png" />
+                            </button>
+                        </div>
+                        <div>
+                            <div className="howplay">How To Play</div>
+                            <div className="guess6">Guess the Wordle in 6 tries. </div>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Each guess must be a valid 5-letter word.</li>
+                                <li>The color of the tiles will change to show how close your guess was to the word.</li>
+                            </ul>
+                        </div>
+                        <div className="examples">
+                            <span>Examples</span>
+                            <div className="wordy">
+                                <div className="W">W</div>
+                                <div>O</div>
+                                <div>R</div>
+                                <div>D</div>
+                                <div>Y</div>
+                            </div>
+                            <p><b>W </b>is in the word and in the correct spot.</p>
+                        </div>
+                        <div className="light">
+                            <div className="wordy">
+                                <div className="L">L</div>
+                                <div>I</div>
+                                <div>G</div>
+                                <div>H</div>
+                                <div>T</div>
+                            </div>
+                            <p><b>I</b> is in the word but in the wrong spot.</p>
+                        </div>
+                        <div className="rogue">
+                            <div className="wordy">
+                                <div >R</div>
+                                <div>O</div>
+                                <div>G</div>
+                                <div className="U">U</div>
+                                <div>E</div>
+                            </div>
+                            <p><b>U</b> is not in the word in any spot.</p>
+                        </div>
+                        <div className="howplayfooter">
+                            <div>
+                            </div>
+                            <button onClick={reportBug}>
+                                Report a Bug
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+            {showStatistics &&
+                <div className="settingsbackground">
+                    <div className="statisticpopup">
+                        <div className="statisticclosebutton">
+                            <button className="closebutton" onClick={() => {
+                                setdisableInput(false)
+                                setShowStatistics(false)
+                            }}>
+                                <img style={{ height: "40px", width: "40px" }} src="/Xbutton.png" />
+                            </button>
+                        </div>
+                        <div className="statistictext">
+                            Statistics
+                        </div>
+                        <div className="statisticbody">
+                            {!user ?
+                                <>
+                                    <img style={{ height: "300px", width: "220px" }} src="/statistic.png" />
+                                    <div className="statistictrack">
+                                        Track your stats and view badges.
+                                    </div>
+                                    <div className="statisticaccess">
+                                        Access your Wordle badges, win percentage and more with a free account.
+                                    </div>
+                                    <button onClick={() => navigate('/login')} className="createfreebutton">
+                                        Create a free account
+                                    </button>
+                                </>
+                                :
+                                <>
+                                    <div className="topstats">
+                                        <div className="statitem">
+                                            <div className="bignumb">{user.gamesPlayed || 0}</div>
+                                            <div className="statlabel">Played</div>
+                                        </div>
+                                        <div className="statitem">
+                                            <div className="bignumb">
+                                                {user.gamesPlayed ? Math.round((user.gamesWon / user.gamesPlayed) * 100) : 0}
+                                            </div>
+                                            <div className="statlabel">Win %</div>
+                                        </div>
+                                        <div className="statitem">
+                                            <div className="bignumb">{user.currentStreak || 0}</div>
+                                            <div className="statlabel">Current Streak</div>
+                                        </div>
+                                        <div className="statitem">
+                                            <div className="bignumb">{user.maxStreak || 0}</div>
+                                            <div className="statlabel">Max Streak</div>
+                                        </div>
+                                    </div>
+                                    <div className="guesscontainer">
+                                        <div className="guesstitle">GUESS DISTRIBUTION</div>
+                                        {guessDistribution.map((item) => (
+                                            <div className="individualguess" key={item.num}>
+                                                <div className="guessnum">{item.num}</div>
+                                                <div className="guessbartrack">
+                                                    <div className={item.count > 0 ? "guessbarfilled" : "guessbarempty"} style={{ width: item.count > 0 ? `${Math.max(item.percent, 8)}%` : '28px' }} >
+                                                        <span className="guesscount">{item.count}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <div className="header">
+                <div className="hamburgerdiv">
+                    <button className="hamburgerbutton" onClick={() => {
+                        setdisableInput(true)
+                        setShowBurger(true)
+                    }}>
+                        <img style={{ height: "40px", width: "45px" }} src="hamburger.png" />
+                    </button>
+                </div>
+                <div className="rightside">
+                    <button onClick={() => {
+                        setdisableInput(true)
+                        setShowStatistics(true)
+                    }}>
+                        <img src="/statistics.png" />
+                    </button>
+                    <button onClick={() => {
+                        setdisableInput(true)
+                        setShowHowPlay(true)
+                    }}>
+                        <img src="/whitequestionmark.png" />
+                    </button>
+                    <button onClick={() => {
+                        setdisableInput(true)
+                        setShowSettings(true)
+                    }}>
+                        <img src="/settings.png" />
+                    </button>
+                </div>
+            </div>
+            <div className="board">
+                {showGamePopup &&
+                    <div className={"popupmessage"}>{MessagetoShow}</div>
+
+                }
+                {guesses.map((row, rowIndex) => (
+                    <div key={rowIndex} className={shakeRow === rowIndex ? "wordanimation" : "word"}>
+                        {row.map((letter, colIndex) => (
+                            <div key={letter === '' ? `${rowIndex}${colIndex}` : `${rowIndex}${colIndex}${letter}`} className={winRow === rowIndex && justWon ? 'jump' : determineColor(letter, colIndex, rowIndex)} style={{ animationDelay: `${colIndex * 0.3}s` }}>
+                                {letter}
                             </div>
                         ))}
                     </div>
-                        </>
-                    }   
-                </div>
+                ))}
             </div>
-        </div>
-        
-        }
+            {!gameOver &&
+                <div className="keyboard">
+                    {keyboard.map((row, rowIndex) => (
+                        <div key={rowIndex} className="keyboardrow">
+                            {row.map((letter, colIndex) => (
+                                <button onClick={() => keyPress(letter)} key={colIndex} className={keyboardColor[letter.toLowerCase()] === 'green' ? 'keyboardgreen' : keyboardColor[letter.toLowerCase()] === 'yellow' ? 'keyboardyellow' : keyboardColor[letter.toLowerCase()] === 'gray' ? 'keyboardgray' : letter === "DELETE" ? "DELETE" : letter === "ENTER" ? "ENTER" : "keyboardletter"
+                                }>
+                                    {letter}
+                                </button>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            }
+            {gameOver &&
+                <div className="gameoverbuttons">
+                    <button className="resultbutton" onClick={() => setShowStatistics(true)}>See Results</button>
+                    <button onClick={() => navigate('/')} className="homebutton">Home</button>
+                </div>
+            }
 
-      <div className="header">
-        <div className="hamburgerdiv">
-            <button className="hamburgerbutton" onClick={() => {
-                setdisableInput(true)
-                setShowBurger(true)
-                }}> 
-                <img style= {{height:"40px", width:"45px"}}src="hamburger.png"/> 
-            </button>
-        </div>
-        <div className="rightside">
-            <button onClick={() => {
-                setdisableInput(true)
-                setShowStatistics(true)
-            }}>
-                <img src="/statistics.png"/>
-            </button>
-            <button onClick={() => {
-                setdisableInput(true)
-                setShowHowPlay(true)
-            }}>
-                <img src="/whitequestionmark.png"/>
-            </button>
-            <button onClick={()=>  {          
-                    setdisableInput(true)
-                    setShowSettings(true)}}>
-                <img src="/settings.png"/>
-            </button>
-        </div>
-      </div>
-      <div className="board">
-        {showGamePopup &&
-        <div className={"popupmessage"}>{MessagetoShow}</div>
-        
-        }
-        {guesses.map((row, rowIndex) => (
-            <div key={rowIndex} className={shakeRow === rowIndex ? "wordanimation" : "word"}> 
-            {row.map((letter, colIndex) => (
-                <div key={letter === '' ? `${rowIndex}${colIndex}` :`${rowIndex}${colIndex}${letter}`} className={winRow === rowIndex && justWon? 'jump' : determineColor(letter, colIndex, rowIndex)} style={{ animationDelay: `${colIndex * 0.3}s` }}>
-                    {letter}
+            <div className={showBurger ? "overlay" : "overlayHidden"}>
+                <div className="overlayheader">
+                    <button className="closebutton" onClick={() => {
+                        setdisableInput(false)
+                        setShowBurger(false)
+                    }}>
+                        <img style={{ width: "32px", height: "32px" }} src="/Xbutton.png" />
+                    </button>
                 </div>
-            ))}
-            </div>
-        ))}
-      </div>
-      {!gameOver && 
-        <div className="keyboard">
-        {keyboard.map((row,rowIndex) => (
-            <div key={rowIndex} className="keyboardrow"> 
-            {row.map((letter,colIndex) => (
-                <button onClick = {() => keyPress(letter)} key={colIndex} className={keyboardColor[letter.toLowerCase()] === 'green' ? 'keyboardgreen' : keyboardColor[letter.toLowerCase()] === 'yellow' ? 'keyboardyellow' : keyboardColor[letter.toLowerCase()] === 'gray' ? 'keyboardgray' : letter === "DELETE" ? "DELETE" : letter === "ENTER" ? "ENTER" : "keyboardletter"
-            }>
-                    {letter}
-                </button>
-            ))}
-            </div>
-        ))}
-      </div> 
-      }
-      {gameOver &&
-        <div className="gameoverbuttons">
-            <button className="resultbutton" onClick={()=> setShowStatistics(true)}>See Results</button>
-            <button onClick={()=> navigate('/')} className="homebutton">Home</button>
-        </div>
-      }
-      
-      <div className={showBurger ? "overlay" : "overlayHidden"}>
-        <div className="overlayheader">
-            <button className="closebutton" onClick={() => {
-                setdisableInput(false)
-                setShowBurger(false)}}>
-                <img style={{width:"32px", height:"32px"}} src="/Xbutton.png" />
-            </button>
-        </div>
-        <img style={{width:"100%", height:"200px"}}src="/wordlebackground.png"/>
-        <div className="privacysection">
-            <div style={{paddingLeft:"20px"}}>Privacy Settings</div>
-            <div className="privacy" >
-                    <button>Privacy Policy</button>
-                    <button>Cookie Policy</button>
-                    <button>Privacy FAQ</button>
-                    <button onClick={()=> {
-                        if (!user) {
+                <img style={{ width: "100%", height: "200px" }} src="/wordlebackground.png" />
+                <div className="privacysection">
+                    <div style={{ paddingLeft: "20px" }}>Privacy Settings</div>
+                    <div className="privacy" >
+                        <button>Privacy Policy</button>
+                        <button>Cookie Policy</button>
+                        <button>Privacy FAQ</button>
+                        <button onClick={() => {
+                            if (!user) {
+                                navigate('/login')
+                            }
+                            navigate('/deleteAccount', { state: { email: user.email } })
+                        }}>Delete My Account</button>
+                        <button>Your Privacy Choices</button>
+                    </div>
+
+                </div>
+                <div className="logoutsection">
+                    <button className="bottomhome" onClick={() => navigate('/')}>HOME</button>
+                    <button className="bottomloginbutton" onClick={() => {
+                        if (user) {
+                            setUser(null)
+                            localStorage.removeItem('user')
+                            navigate('/')
+                        } else {
                             navigate('/login')
                         }
-                        navigate('/deleteAccount', {state: {email: user.email}})
-                    }}>Delete My Account</button>
-                    <button>Your Privacy Choices</button>
+                    }}>
+                        {user ? 'LOG OUT' : 'LOG IN'} </button>
+
+                </div>
             </div>
-
-        </div>
-        <div className="logoutsection">
-            <button className="bottomhome" onClick={()=> navigate('/')}>HOME</button>
-            <button className="bottomloginbutton" onClick={() => {
-                if (user) {
-                    setUser(null)
-                    localStorage.removeItem('user')
-                    navigate('/')
-                } else {
-                 navigate('/login')
-                }
-            }}> 
-            {user ? 'LOG OUT' : 'LOG IN' } </button>
-
-        </div>
-       </div>
-        <div className="footer">
+            <div className="footer">
                 <a>&copy; The Aron Times Company</a>
                 <div>|</div>
                 <a>AronTimes.com</a>
@@ -930,9 +932,9 @@ function App() {
                 <a>Terms of Sale</a>
                 <div>|</div>
                 <a>Your Privacy Choices</a>
+            </div>
         </div>
-    </div>
     )
-  }
-  
-  export default App
+}
+
+export default App

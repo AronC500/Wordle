@@ -1,6 +1,6 @@
 import "./SetNewPassword.css"
-import {useLocation, useNavigate} from 'react-router-dom'
-import {useState, useEffect} from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 function NewPassword() {
     const location = useLocation()
     const navigate = useNavigate()
@@ -8,12 +8,14 @@ function NewPassword() {
     const [passText, setPassText] = useState('Show')
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
-    const [errorMessage, setErrorMessage]  = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const [isInvalid, setisInvalid] = useState(false)
 
     useEffect(() => {
         if (!email) {
             navigate('/login')
+            return
+
 
         }
     }, [])
@@ -31,15 +33,15 @@ function NewPassword() {
 
     async function checkPassword() {
         const response = await fetch('https://wordle-production-4ba9.up.railway.app/login', {
-                method:"POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({password,email})
-         })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ password, email })
+        })
         const data = await response.json()
         if (response.status === 500) {
-            console.log(data.error) 
+            console.log(data.error)
             return
         }
         if (response.status === 200) {
@@ -55,19 +57,19 @@ function NewPassword() {
         }
         else {
             const response = await fetch('https://wordle-production-4ba9.up.railway.app/newPassword', {
-                method:"PATCH",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({password,email})
+                body: JSON.stringify({ password, email })
             })
             const data = await response.json()
             if (response.status === 500) {
-                console.log(data.error) 
+                console.log(data.error)
                 return
             }
             if (response.ok) {
-                navigate('/login/password/SetNewPassword/UpdatedPass', {state: {email: email}})
+                navigate('/login/password/SetNewPassword/UpdatedPass', { state: { email: email } })
             }
 
         }
@@ -81,27 +83,27 @@ function NewPassword() {
         <div className="SetNewPasswordBackground">
             <div className="headingtext">
                 <div className="setnewpassword">Set a new password</div>
-                <div className="newpasswordtext"> Your email <span style={{fontWeight:600}}>{email}</span> has been verified. Please set a new password, and we'll log you in.
+                <div className="newpasswordtext"> Your email <span style={{ fontWeight: 600 }}>{email}</span> has been verified. Please set a new password, and we'll log you in.
                 </div>
             </div>
-            <div className="password" style={{marginTop:"16px"}}>
-                    <div>Password</div>
-                    <input     maxLength={255} className= {isInvalid ? 'inputInvalid': 'inputNormal'} type={show ? 'text' : 'password'} onChange = {InputChange}/>
-                    <button onClick = {showText} className="pPasswordEdit">{passText}</button>
+            <div className="password" style={{ marginTop: "16px" }}>
+                <div>Password</div>
+                <input maxLength={255} className={isInvalid ? 'inputInvalid' : 'inputNormal'} type={show ? 'text' : 'password'} onChange={InputChange} />
+                <button onClick={showText} className="pPasswordEdit">{passText}</button>
 
             </div>
             {isInvalid &&
                 <div className="setnewpassworderror">
-                    <img src="/error.png" style={{width:"13px",height:"13px", paddingTop:"1.5px"}}/>
+                    <img src="/error.png" style={{ width: "13px", height: "13px", paddingTop: "1.5px" }} />
                     <div>{errorMessage}</div>
                 </div>
-                
-                }
 
-            <div className="submit" style={{marginTop:"16px"}}>
+            }
+
+            <div className="submit" style={{ marginTop: "16px" }}>
                 <button onClick={checkPassword} className="submitbutton">Set password</button>
             </div>
-            
+
         </div>
     )
 }

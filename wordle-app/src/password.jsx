@@ -1,11 +1,11 @@
 import "./password.css"
-import {useNavigate, useLocation} from 'react-router-dom'
-import {useState, useEffect} from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 function Password() {
 
     const location = useLocation()
-    const email =  location.state?.email || ''
+    const email = location.state?.email || ''
     const [passText, setPassText] = useState('Show')
     const [show, setShow] = useState(false)
     const [password, setPassword] = useState('')
@@ -15,6 +15,8 @@ function Password() {
     useEffect(() => {
         if (!email) {
             navigate('/login')
+            return
+
         }
     }, [])
 
@@ -22,15 +24,15 @@ function Password() {
 
     async function LogIn() {
         const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login`, {
-            method:'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({email,password})
+            body: JSON.stringify({ email, password })
         })
 
         const data = await response.json()
-        if (response.status=== 500 || response.status === 404) {
+        if (response.status === 500 || response.status === 404) {
             console.log(data.error)
             return
         }
@@ -59,34 +61,34 @@ function Password() {
     }
 
     function editEmail() {
-        navigate('/login', {state: {email}})
+        navigate('/login', { state: { email } })
 
     }
-    
+
     return (
         <div className="passwordbackground">
             <div className="inner">
-            <div className="headertext">
-                <div className="welcome">Welcome back</div>
-                <div className="enterpass">Enter your password to log in.</div>
-            </div>
-            <div className="inputs">
-                <div className="email">
-                    <div>Email address</div>
-                    <input disabled type="email" value={email}/>
-                    <button onClick={editEmail} className="pEmailEdit">Edit</button>
+                <div className="headertext">
+                    <div className="welcome">Welcome back</div>
+                    <div className="enterpass">Enter your password to log in.</div>
                 </div>
-                <div className="password">
-                    <div>Password</div>
-                    <input maxLength={255} type={show ? 'text' : 'password'} onChange = {(e) => setPassword(e.target.value)}/>
-                    <button onClick = {showText} className="pPasswordEdit">{passText}</button>
+                <div className="inputs">
+                    <div className="email">
+                        <div>Email address</div>
+                        <input disabled type="email" value={email} />
+                        <button onClick={editEmail} className="pEmailEdit">Edit</button>
+                    </div>
+                    <div className="password">
+                        <div>Password</div>
+                        <input maxLength={255} type={show ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} />
+                        <button onClick={showText} className="pPasswordEdit">{passText}</button>
+                    </div>
+                    <a onClick={() => navigate('/login/password/forgot', { state: { email, sendCode: true } })} className="forgot">Forgot your password?</a>
                 </div>
-                <a onClick={()=> navigate('/login/password/forgot', {state: {email, sendCode: true}})} className="forgot">Forgot your password?</a>
-            </div>
-            {isInvalid && <div className="errormessage">The password you entered is incorrect. Please try again. </div>}
-            <div className="buttons" style={{marginTop:"10px"}}>
-                <button onClick = {LogIn} className="loginPass">Log in</button>
-            </div>
+                {isInvalid && <div className="errormessage">The password you entered is incorrect. Please try again. </div>}
+                <div className="buttons" style={{ marginTop: "10px" }}>
+                    <button onClick={LogIn} className="loginPass">Log in</button>
+                </div>
             </div>
         </div>
     )
