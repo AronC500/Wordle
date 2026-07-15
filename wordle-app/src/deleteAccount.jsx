@@ -9,33 +9,34 @@ function DeleteAccount() {
     const [text, setText] = useState('')
     const [confirm, setConfirm] = useState(false)
     const [deleted, setDeleted] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
     useEffect(() => {
-        if (!email) {
+        if (!email || !localStorage.getItem('token')) {
             navigate('/login')
             return
-
-
         }
     }, [])
     function textChange(e) {
         setText(e.target.value)
     }
     async function deleteAccount() {
+        const token = localStorage.getItem('token')
         const response = await fetch('https://wordle-production-4ba9.up.railway.app/deleteAccount', {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email })
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
         })
         const data = await response.json()
         if (!response.ok) {
-            console.log(data.error)
+            setErrorMessage(data.error)
             return
         }
         setDeleted(true)
         localStorage.removeItem('user')
+        localStorage.removeItem('token')
     }
 
     return (
@@ -78,8 +79,14 @@ function DeleteAccount() {
                             I confirm I want to delete my Aron Times account.
                         </div>
                     </div>
+                    {errorMessage &&
+                        <div className="setnewpassworderror" style={{ marginBottom: '10px' }}>
+                            <img src="/error.png" style={{ width: "13px", height: "13px" }} />
+                            <div>{errorMessage}</div>
+                        </div>
+                    }
                     <div className="deleteSection">
-                        <button className={confirm ? 'normalButton' : 'disableButton'} onClick={deleteAccount}>Delete account</button>
+                        <button disabled={!confirm} className={confirm ? 'normalButton' : 'disableButton'} onClick={deleteAccount}>Delete account</button>
                         <a href='/game' className="permanent">Return to Wordle</a>
                     </div>
 

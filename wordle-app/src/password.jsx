@@ -21,14 +21,13 @@ function Password() {
     }, [])
 
 
-
     async function LogIn() {
         const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password, google: false })
         })
 
         const data = await response.json()
@@ -43,7 +42,8 @@ function Password() {
 
         }
         if (response.ok) {
-            localStorage.setItem('user', JSON.stringify(data))
+            localStorage.setItem('user', JSON.stringify(data.user))
+            localStorage.setItem('token', data.token)
             setisInvalid(false)
             navigate('/game')
             return

@@ -8,7 +8,6 @@ function ForgotPassword() {
     const [input, setInput] = useState('')
     const [showPopUp, setShowPopUp] = useState(false)
     const [invalidCode, SetinvalidCode] = useState(false)
-    const [verificationExpire, setVerificationExpire] = useState('')
     const [sendCode, setSendCode] = useState(location.state?.sendCode)
 
     async function sendVerificationCode() {
@@ -23,9 +22,6 @@ function ForgotPassword() {
         if (response.status === 500 || response.status === 404) {
             console.log(data.error)
             return
-        }
-        if (response.ok) {
-            setVerificationExpire(data.expiresAt)
         }
     }
 
@@ -55,7 +51,6 @@ function ForgotPassword() {
         setShowPopUp(true);
     }
     async function submitCode() {
-        const isNotExpired = new Date(verificationExpire) > new Date();
         const response = await fetch(`https://wordle-production-4ba9.up.railway.app/verification?email=${encodeURIComponent(email)}&code=${encodeURIComponent(input)}`, {
             method: 'GET'
         })
@@ -64,9 +59,9 @@ function ForgotPassword() {
         if (response.status === 500) {
             console.log(data.error)
         }
-        if (data.success && isNotExpired) {
+        if (data.success) {
             navigate("/login/password/SetNewPassword", {
-                state: { email }
+                state: { email, resetToken: data.resetToken }
             });
             return;
 

@@ -1,6 +1,6 @@
 import "./CreateFreeAccount.css"
-import {useLocation, useNavigate} from 'react-router-dom'
-import {useState, useEffect} from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 function CreateFree() {
     const navigate = useNavigate()
     const location = useLocation()
@@ -9,19 +9,22 @@ function CreateFree() {
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
     const [isInvalidPass, setisInvalidPass] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('This password must be at least six characters long.')
 
     useEffect(() => {
         if (!email) {
             navigate('/login')
+            return
         }
     }, [])
 
     async function checkPassword() {
         if (password.length < 6) {
+            setErrorMessage('This password must be at least six characters long.')
             setisInvalidPass(true);
             return;
         }
-    
+
         const response = await fetch("https://wordle-production-4ba9.up.railway.app/login", {
             method: "POST",
             headers: {
@@ -33,15 +36,17 @@ function CreateFree() {
                 google: false
             })
         });
-    
+
         const data = await response.json();
-    
+
         if (!response.ok) {
-            console.log(data.error);
+            setErrorMessage(data.error)
+            setisInvalidPass(true)
             return;
         }
-    
-        localStorage.setItem("user", JSON.stringify(data));
+
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
         navigate("/game");
     }
     function showText() {
@@ -64,33 +69,33 @@ function CreateFree() {
             <div className="headertext">
                 <div className="createtext">Create your free account</div>
             </div>
-            <div className="inputs" style={{marginTop:"30px"}}>
-                <div className="email" style={{margin:"0px", padding:"0px"}}>
+            <div className="inputs" style={{ marginTop: "30px" }}>
+                <div className="email" style={{ margin: "0px", padding: "0px" }}>
                     <div>Email address</div>
                     <input value={email} disabled type="email" />
-                    <button  onClick={()=> {
-                        navigate('/login', {state:{email}})
-                    }}className="pEmailEdit">Edit</button>
+                    <button onClick={() => {
+                        navigate('/login', { state: { email } })
+                    }} className="pEmailEdit">Edit</button>
                 </div>
                 <div className="password">
 
                     <div>Password</div>
-                    <input className= {isInvalidPass ? 'inputInvalid': 'inputNormal'} type={show ? 'text' : 'password'} onChange = {InputChange}/>
-                    <button onClick = {showText} className="pPasswordEdit">{passText}</button>
+                    <input className={isInvalidPass ? 'inputInvalid' : 'inputNormal'} type={show ? 'text' : 'password'} onChange={InputChange} />
+                    <button onClick={showText} className="pPasswordEdit">{passText}</button>
                 </div>
             </div>
-            {isInvalidPass && 
-                <div className="setnewpassworderror" style={{marginTop: "8px", marginBottom: "8px"}}>
-                    <img src="/error.png" style={{width:"13px",height:"13px", paddingTop:"1.5px"}}/>
-                    <div>This password must be at least six characters long.</div>
+            {isInvalidPass &&
+                <div className="setnewpassworderror" style={{ marginTop: "8px", marginBottom: "8px" }}>
+                    <img src="/error.png" style={{ width: "13px", height: "13px", paddingTop: "1.5px" }} />
+                    <div>{errorMessage}</div>
                 </div>
             }
 
-            <div className="submit" style={{gap:"20px", marginTop: `${isInvalidPass ? '0px' : '30px'}`}}>
-                <div className="termstext" style={{textAlign:"start", fontSize:"13.5px"}}> 
+            <div className="submit" style={{ gap: "20px", marginTop: `${isInvalidPass ? '0px' : '30px'}` }}>
+                <div className="termstext" style={{ textAlign: "start", fontSize: "13.5px" }}>
                     By creating an account, you agree to the <a>Terms of Sale</a>, <a>Terms of Service</a>, and <a>Privacy Policy</a>.
                 </div>
-                <button onClick={checkPassword}  className="submitbutton">Create account</button>
+                <button onClick={checkPassword} className="submitbutton">Create account</button>
             </div>
         </div>
     )

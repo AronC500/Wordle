@@ -1,6 +1,6 @@
 import "./Login.css"
-import {useState} from 'react'
-import { useNavigate, useLocation} from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useGoogleLogin } from '@react-oauth/google'
 
 function Login() {
@@ -8,51 +8,42 @@ function Login() {
     const location = useLocation()
     const [message, setShowMessage] = useState('')
     const email = location.state?.email || ''
+
     const googleLogin = useGoogleLogin({
         onSuccess: async (response) => {
-            console.log('GOOGLE LOGIN SUCCESS FIRED', response)
-
-            const user = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-                headers: {
-                    Authorization: `Bearer ${response.access_token}`
-                },
-            })
-            const data = await user.json()
-            console.log('Google userinfo:', data)
-    
             const databaseresponse = await fetch("https://wordle-production-4ba9.up.railway.app/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    email: data.email,
-                    password: '',
-                    google: true
+                    google: true,
+                    access_token: response.access_token
                 })
             })
-            const userData = await databaseresponse.json()
+            const result = await databaseresponse.json()
             if (databaseresponse.ok) {
-                localStorage.setItem('user', JSON.stringify(userData))
+                localStorage.setItem('user', JSON.stringify(result.user))
+                localStorage.setItem('token', result.token)
                 navigate('/game')
             }
             else {
-                console.log(userData.error)
+                setShowMessage(result.error)
             }
         },
         onError: (err) => {
             console.log("Google Login failed", err)
         }
-    }) 
+    })
     const [input, setInput] = useState(email)
     const [isInvalid, setIsInvalid] = useState(false)
     async function submitEmail() {
-        if (!input.includes('@gmail.com') || input.split('@')[0].length === 0) {   
-            setShowMessage('Please enter a valid email address.')         
+        if (!input.includes('@gmail.com') || input.split('@')[0].length === 0) {
+            setShowMessage('Please enter a valid email address.')
             setIsInvalid(true)
             return
         }
-        else {        
+        else {
             setIsInvalid(false)
         }
         const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login/${encodeURIComponent(input)}`, {
@@ -60,7 +51,7 @@ function Login() {
         })
 
         if (response.status === 404) {
-            navigate('/login/createFree', {state: {email:input}})
+            navigate('/login/createFree', { state: { email: input } })
             return
         }
 
@@ -71,10 +62,8 @@ function Login() {
                 setShowMessage('This email previously logged in using Google.')
                 return;
             }
-            
-            
-            navigate('/login/password', {state: {email:input}})
-            
+
+            navigate('/login/password', { state: { email: input } })
 
         }
 
@@ -82,7 +71,7 @@ function Login() {
     }
 
     function onChangeInput(e) {
-        setInput(e.target.value) 
+        setInput(e.target.value)
         setIsInvalid(false)
     }
     return (
@@ -93,34 +82,34 @@ function Login() {
             <div className="forms">
                 <div className="email">
                     <div className="emailtext">Email address</div>
-                    <input maxLength={64} className= {isInvalid ? 'inputInvalid': 'inputNormal'} value ={input} onChange={onChangeInput} type="email"/>
+                    <input maxLength={64} className={isInvalid ? 'inputInvalid' : 'inputNormal'} value={input} onChange={onChangeInput} type="email" />
                     {isInvalid &&
                         <div className="error">
-                            <img src='/error.png' style={{width:"13px",height:"13px"}}/>
+                            <img src='/error.png' style={{ width: "13px", height: "13px" }} />
                             <div>{message}</div>
                         </div>
                     }
 
-                    
+
                 </div>
-                <button onClick = {submitEmail} className="continuebutton">Continue</button>
+                <button onClick={submitEmail} className="continuebutton">Continue</button>
                 <div className="horizontalline">
-                    <hr/>
+                    <hr />
                     <p>or</p>
-                    <hr/>
+                    <hr />
                 </div>
-                <div className="termstext"> 
-                By continuing, you agree to the <a>Terms of Sale</a>, <a>Terms of Service</a>, and <a>Privacy Policy</a>.
+                <div className="termstext">
+                    By continuing, you agree to the <a>Terms of Sale</a>, <a>Terms of Service</a>, and <a>Privacy Policy</a>.
                 </div>
                 <div className="alternateOptions">
                     <button className="google" onClick={() => googleLogin()}>
-                        <img style={{width:'18px', height:'18px'}} src="google.png"/>
+                        <img style={{ width: '18px', height: '18px' }} src="google.png" />
                         <div>
                             Continue with Google
                         </div>
                     </button>
                     <button className="apple">
-                        <img style={{width:'23px', height:'23px', }} src="apple.png"/>
+                        <img style={{ width: '23px', height: '23px', }} src="apple.png" />
                         <div>
                             Continue with Apple
                         </div>

@@ -5,6 +5,7 @@ function NewPassword() {
     const location = useLocation()
     const navigate = useNavigate()
     const email = location.state?.email
+    const resetToken = location.state?.resetToken
     const [passText, setPassText] = useState('Show')
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
@@ -12,11 +13,9 @@ function NewPassword() {
     const [isInvalid, setisInvalid] = useState(false)
 
     useEffect(() => {
-        if (!email) {
+        if (!email || !resetToken) {
             navigate('/login')
             return
-
-
         }
     }, [])
 
@@ -32,47 +31,48 @@ function NewPassword() {
     }
 
     async function checkPassword() {
-        const response = await fetch('https://wordle-production-4ba9.up.railway.app/login', {
+        if (password.length < 6) {
+            setErrorMessage("This password must be at least six characters long.")
+            setisInvalid(true)
+            return
+        }
+
+        const checkResponse = await fetch('https://wordle-production-4ba9.up.railway.app/login', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ password, email })
+            body: JSON.stringify({ password, email, google: false })
         })
-        const data = await response.json()
-        if (response.status === 500) {
+        if (checkResponse.status === 500) {
+            const data = await checkResponse.json()
             console.log(data.error)
             return
         }
-        if (response.status === 200) {
-            console.log(data.error)
+
+        if (checkResponse.status === 200) {
             setErrorMessage("Your new password must be different than your previous password.")
             setisInvalid(true)
             return
-
         }
-        else if (password.length < 6) {
-            setErrorMessage("This password must be at least six characters long.")
+
+        const response = await fetch('https://wordle-production-4ba9.up.railway.app/newPassword', {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ password, email, resetToken })
+        })
+        const data = await response.json()
+        if (!response.ok) {
+            setErrorMessage(data.error)
             setisInvalid(true)
+            return
         }
-        else {
-            const response = await fetch('https://wordle-production-4ba9.up.railway.app/newPassword', {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ password, email })
-            })
-            const data = await response.json()
-            if (response.status === 500) {
-                console.log(data.error)
-                return
-            }
-            if (response.ok) {
-                navigate('/login/password/SetNewPassword/UpdatedPass', { state: { email: email } })
-            }
 
-        }
+        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('token', data.token)
+        navigate('/login/password/SetNewPassword/UpdatedPass')
     }
     function InputChange(e) {
         setPassword(e.target.value)

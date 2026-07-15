@@ -107,7 +107,8 @@ function App() {
             const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
                     [dbField]: value
@@ -223,8 +224,8 @@ function App() {
                     const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${parsedUser.id}`, {
                         method: 'PATCH',
                         headers: {
-                            'Content-Type':
-                                'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
                         },
                         body: JSON.stringify({
                             gameState: freshState,
@@ -293,7 +294,8 @@ function App() {
             const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
                     gameState: state,
@@ -381,7 +383,6 @@ function App() {
             return
         }
 
-        console.log('user BEFORE update:', user)
         const updates = {
             gamesPlayed: user.gamesPlayed + 1,
             gamesWon: won ? user.gamesWon + 1 : user.gamesWon,
@@ -394,12 +395,11 @@ function App() {
             updates[`WonIN${guessCount}`] = user[`WonIN${guessCount}`] + 1
         }
 
-        console.log('updates being sent:', updates)
-
         const response = await fetch(`https://wordle-production-4ba9.up.railway.app/user/${user.id}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify(updates)
         })
@@ -408,7 +408,6 @@ function App() {
             return
         }
         const data = await response.json()
-        console.log('data received FROM backend:', data)
         setUser(data)
         localStorage.setItem('user', JSON.stringify(data))
     }
@@ -454,7 +453,6 @@ function App() {
                         setMessagetoShow("Phew")
                     }
                     setTimeout(() => {
-                        console.log('1800ms callback - user.id:', user?.id)
                         determineKeyboardColor(word)
                         setwinRow(currentRow)
                         saveGameState({ winRow: currentRow, currentRow: nextRow })
@@ -462,8 +460,6 @@ function App() {
                     setdisableInput(true)
                     setJustWon(true)
                     setTimeout(() => {
-                        console.log('3600ms callback - user.id:', user?.id)
-
                         isGameOver(true)
                         saveGameState({ winRow: currentRow, currentRow: nextRow, gameOver: true })
                         recordGameResult(true, currentRow + 1)
@@ -894,6 +890,7 @@ function App() {
                         <button onClick={() => {
                             if (!user) {
                                 navigate('/login')
+                                return
                             }
                             navigate('/deleteAccount', { state: { email: user.email } })
                         }}>Delete My Account</button>
@@ -907,6 +904,7 @@ function App() {
                         if (user) {
                             setUser(null)
                             localStorage.removeItem('user')
+                            localStorage.removeItem('token')
                             navigate('/')
                         } else {
                             navigate('/login')
