@@ -7,7 +7,7 @@ function App() {
     const startDate = new Date(2021, 5, 19)
     const today = new Date()
     var daysDifference = Math.floor((today - startDate) / (1000 * 60 * 60 * 24))
-    const currentWord = answerList[daysDifference % answerList.length]
+    const currentWord = answerList[daysDifference % answerList.length + 1]
     const [shakeRow, setShakeRow] = useState(null)
     const navigate = useNavigate()
     const [showBurger, setShowBurger] = useState(false)
