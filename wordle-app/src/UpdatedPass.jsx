@@ -3,37 +3,17 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useEffect } from 'react'
 function UpdatedPass() {
     const navigate = useNavigate()
-    const location = useLocation()
-    const email = location.state?.email
 
     useEffect(() => {
-        if (!email) {
+        if (!localStorage.getItem('token')) {
             navigate('/login')
             return
-
-
         }
     }, [])
-    async function continueButton() {
-        const response = await fetch(`https://wordle-production-4ba9.up.railway.app/login/${encodeURIComponent(email)}`, {
-            method: 'GET'
-        })
 
-
-
-        const data = await response.json()
-        if (response.status === 404 || response.status === 500) {
-            console.log(data.error)
-            return
-        }
-        if (response.ok) {
-            localStorage.setItem('user', JSON.stringify(data))
-            navigate('/game')
-        }
-
-
+    function continueButton() {
+        navigate('/game')
     }
-
 
     return (
         <div>
