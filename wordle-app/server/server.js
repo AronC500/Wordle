@@ -56,14 +56,15 @@ function requireAuth(req, res, next) {
         return res.status(401).json({ error: 'Unauthorized' })
     }
     const token = authHeader.slice('Bearer '.length)
-    try {
-        req.user = jwt.verify(token, JWT_SECRET)
-        next()
-    } catch {
-        return res.status(401).json({ error: 'Invalid or expired session, please log in again' })
-    }
-}
 
+    jwt.verify(token, JWT_SECRET, (err, payload) => {
+        if (err) {
+            return res.status(401).json({ error: 'Invalid or expired session, please log in again' })
+        }
+        req.user = payload
+        next()
+    })
+}
 
 app.post('/login', async (req, res) => {
     let { email, password, google, access_token } = req.body
