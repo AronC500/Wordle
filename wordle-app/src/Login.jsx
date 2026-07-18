@@ -8,7 +8,8 @@ function Login() {
     const location = useLocation()
     const [message, setShowMessage] = useState('')
     const email = location.state?.email || ''
-
+    const [input, setInput] = useState(email)
+    const [isInvalid, setIsInvalid] = useState(false)
     const googleLogin = useGoogleLogin({
         onSuccess: async (response) => {
             const databaseresponse = await fetch("https://wordle-production-4ba9.up.railway.app/login", {
@@ -28,15 +29,13 @@ function Login() {
                 navigate('/game')
             }
             else {
-                setShowMessage(result.error)
+                console.log(result.error)
             }
         },
         onError: (err) => {
             console.log("Google Login failed", err)
         }
     })
-    const [input, setInput] = useState(email)
-    const [isInvalid, setIsInvalid] = useState(false)
     async function submitEmail() {
         if (!input.includes('@gmail.com') || input.split('@')[0].length === 0) {
             setShowMessage('Please enter a valid email address.')

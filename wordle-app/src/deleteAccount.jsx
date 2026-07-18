@@ -31,7 +31,7 @@ function DeleteAccount() {
         })
         const data = await response.json()
         if (!response.ok) {
-            setErrorMessage(data.error)
+            console.log(data.error)
             return
         }
         setDeleted(true)

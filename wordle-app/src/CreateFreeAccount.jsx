@@ -40,8 +40,7 @@ function CreateFree() {
         const data = await response.json();
 
         if (!response.ok) {
-            setErrorMessage(data.error)
-            setisInvalidPass(true)
+            console.log(data.error)
             return;
         }
 
