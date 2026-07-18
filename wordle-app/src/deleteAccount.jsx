@@ -9,8 +9,6 @@ function DeleteAccount() {
     const [text, setText] = useState('')
     const [confirm, setConfirm] = useState(false)
     const [deleted, setDeleted] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
-
     useEffect(() => {
         if (!email || !localStorage.getItem('token')) {
             navigate('/login')
@@ -79,12 +77,6 @@ function DeleteAccount() {
                             I confirm I want to delete my Aron Times account.
                         </div>
                     </div>
-                    {errorMessage &&
-                        <div className="setnewpassworderror" style={{ marginBottom: '10px' }}>
-                            <img src="/error.png" style={{ width: "13px", height: "13px" }} />
-                            <div>{errorMessage}</div>
-                        </div>
-                    }
                     <div className="deleteSection">
                         <button disabled={!confirm} className={confirm ? 'normalButton' : 'disableButton'} onClick={deleteAccount}>Delete account</button>
                         <a href='/game' className="permanent">Return to Wordle</a>

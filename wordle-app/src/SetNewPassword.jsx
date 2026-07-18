@@ -65,8 +65,7 @@ function NewPassword() {
         })
         const data = await response.json()
         if (!response.ok) {
-            setErrorMessage(data.error)
-            setisInvalid(true)
+            console.log(data.error)
             return
         }
 

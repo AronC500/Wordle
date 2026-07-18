@@ -49,7 +49,7 @@ function returnDate() {
 
 }
 function Homepage() {
-    const user = JSON.parse(localStorage.getItem('user'))
+    const user = JSON.parse(localStorage.getItem('user') || null)
     const startDate = new Date(2021, 5, 19)
     const today = new Date()
     const daysDifference = Math.floor((today - startDate) / (1000 * 60 * 60 * 24))
