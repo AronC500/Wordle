@@ -1,7 +1,7 @@
 
 # Wordle Clone
 
-A full-stack Wordle clone built with React, TypeScript, and Node.js.
+A full-stack Wordle clone built with React, TypeScript, MySQL, and Node.js.
 
 # Features
 - Daily Wordle game
