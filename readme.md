@@ -22,4 +22,4 @@ A full-stack Wordle clone built with React, TypeScript, MySQL, and Node.js.
 
 
 # Live Demo
-https://www.yannieismylover.uk/
+https://www.yannieismylover.uk/ (Login might not work due to hosting on Railway and currently not paying for the plans)
