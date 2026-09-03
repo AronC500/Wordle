@@ -22,4 +22,4 @@ A full-stack Wordle clone built with React, TypeScript, MySQL, and Node.js.
 
 
 # Live Demo
-https://wordle-kappa-one.vercel.app/ 
+https://www.yannieismylover.uk/
